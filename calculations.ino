@@ -7,6 +7,7 @@ Arduboy2 arduboy;
 int count = 8;
 int atoms[50] = {1,2,3,-1,3,1,2,2}
 
+
 int addAtoms(int left, int middle, int right){
     if(left != right){
         return 0;
