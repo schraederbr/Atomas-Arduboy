@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/Users/ben.schraeder/Documents/Arduino/libraries/**",
+                "/Users/ben.schraeder/Documents/Arduino/libraries/Arduboy2/src",
+                "/Users/ben.schraeder/Documents/Arduino/libraries/Arduboy/src",
+                "/Users/ben.schraeder/Arduboy Dev",
+                "/Users/ben.schraeder/Documents/Arduino/libraries/Arduboy/**",
+                "/Users/ben.schraeder/Documents/Arduino/libraries/Arduboy2/**"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-x64"
+        }
+    ],
+    "version": 4
+}
