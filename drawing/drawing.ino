@@ -70,10 +70,10 @@ void generateAtomNum()
 // void setup() {
 //     arduboy.begin();
 //     arduboy.clear();
-//     for(int i = 0; i < count; i++){
-//         list.addNode(atoms[i]);
-//     }
-//     list.printList();
+//     // for(int i = 0; i < count; i++){
+//     //     list.addNode(atoms[i]);
+//     // }
+//     // list.printList();
 //     //list.processList();
 //     //list.printList();
 //     //Print all atoms with a for loop
@@ -89,9 +89,9 @@ void generateAtomNum()
     
 //     arduboy.display();
 // }
-// void setup(){
+// // void setup(){
 
-// }
+// // }
 // void loop()
 // {
 // 	arduboy.pollButtons();
