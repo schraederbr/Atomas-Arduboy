@@ -68,7 +68,7 @@ void insertNode(Node* current, int value){
 }
 
 void printNodes(Node* current){
-    for(int i = 0; i < count; i++){
+    for(int i = 0; i < count * 2; i++){
         arduboy.print(current->data);
         current = current->next;
     }
