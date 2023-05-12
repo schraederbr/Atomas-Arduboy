@@ -13,6 +13,8 @@ extern int count;
 extern int atoms[];
 // degrees * pi/180
 
+//DoublyLinkedList list;
+
 void drawCircleNumber(int x, int y, int num)
 {
 	arduboy.drawCircle(x, y, 5, WHITE);
@@ -65,57 +67,65 @@ void generateAtomNum()
 	baseNum++;
 }
 
-void setup() {
-    arduboy.begin();
-    arduboy.clear();
-    //Print all atoms with a for loop
-    arduboy.print(count);
-    arduboy.print(" Atoms: ");
-    for(int i = 0; i < count; i++){
-        arduboy.print(atoms[i]);
-    }
-    arduboy.print("\n");
-	//for(int i = 0; i < count; i++){
-		recAdd(atoms, 8);
-	//}
+// void setup() {
+//     arduboy.begin();
+//     arduboy.clear();
+//     for(int i = 0; i < count; i++){
+//         list.addNode(atoms[i]);
+//     }
+//     list.printList();
+//     //list.processList();
+//     //list.printList();
+//     //Print all atoms with a for loop
+//     arduboy.print(count);
+//     arduboy.print(" Atoms: ");
+//     for(int i = 0; i < count; i++){
+//         arduboy.print(atoms[i]);
+//     }
+//     arduboy.print("\n");
+// 	//for(int i = 0; i < count; i++){
+// 		recAdd(atoms, 8);
+// 	//}
     
-    arduboy.display();
-}
+//     arduboy.display();
+// }
+// void setup(){
 
-void loop()
-{
-	// arduboy.pollButtons();
-	// if (arduboy.justPressed(A_BUTTON))
-	// {
-	// 	addAtom(index + 1, nextNum);
-	// 	generateAtomNum();
-	// }
+// }
+// void loop()
+// {
+// 	arduboy.pollButtons();
+// 	if (arduboy.justPressed(A_BUTTON))
+// 	{
+// 		addAtom(index + 1, nextNum);
+// 		generateAtomNum();
+// 	}
 
-	// if (arduboy.justPressed(LEFT_BUTTON))
-	// {
-	// 	if (index > 0)
-	// 	{
-	// 		index--;
-	// 	}
-	// 	else
-	// 	{
-	// 		index = count - 1;
-	// 	}
-	// }
+// 	if (arduboy.justPressed(LEFT_BUTTON))
+// 	{
+// 		if (index > 0)
+// 		{
+// 			index--;
+// 		}
+// 		else
+// 		{
+// 			index = count - 1;
+// 		}
+// 	}
 
-	// if (arduboy.justPressed(RIGHT_BUTTON))
-	// {
-	// 	if (index < count - 1)
-	// 	{
-	// 		index++;
-	// 	}
-	// 	else
-	// 	{
-	// 		index = 0;
-	// 	}
-	// }
-	// arduboy.clear();
-	// drawAtoms(nums);
-	// drawLine();
-	// arduboy.display();
-}
+// 	if (arduboy.justPressed(RIGHT_BUTTON))
+// 	{
+// 		if (index < count - 1)
+// 		{
+// 			index++;
+// 		}
+// 		else
+// 		{
+// 			index = 0;
+// 		}
+// 	}
+// 	arduboy.clear();
+// 	drawAtoms(nums);
+// 	drawLine();
+// 	arduboy.display();
+// }

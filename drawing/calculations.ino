@@ -8,23 +8,23 @@
 // Need some way to make this array wrap around
 // Maybe I can just make it big and use modulo some how
 
-extern int atoms[50] = {1,2,8,3,3,5,6,1,-1};
-extern int count = 9;
+extern int atoms[50] = {1,2,-1,2,1};
+extern int count = 5;
 
 void moveElements(int arr[], int n, int start, int moveBy)
 {
     if (moveBy >= 0)
     {
-        for (int i = n - 1; i >= start; i--)
+        for (int i = gi(n - 1); i >= gi(start); gi(i--))
         {
-            arr[i + moveBy] = arr[i];
+            arr[gi(i + moveBy)] = arr[gi(i)];
         }
     }
     else
     {
-        for (int i = start; i < n; i++)
+        for (int i = gi(start); i < gi(n); gi(i++))
         {
-            arr[i + moveBy] = arr[i];
+            arr[gi(i + moveBy)] = arr[gi(i)];
         }
     }
 }
