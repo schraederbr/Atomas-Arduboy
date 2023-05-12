@@ -16,7 +16,6 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "E:\\Arduboy Dev\\Atomas-Arduboy\\drawing",
                 "C:\\Users\\Ben\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino",
                 "C:\\Users\\Ben\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\leonardo",
                 "C:\\Users\\Ben\\Documents\\Arduino\\libraries\\Arduboy2\\src",
