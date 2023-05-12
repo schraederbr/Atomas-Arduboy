@@ -58,13 +58,14 @@ class Node {
 // }
 
 //Need to make sure this is circular
-void insertNode(Node* current, int value){
+Node* insertNode(Node* current, int value){
     Node* newNode = new Node();
     newNode->data = value;
     newNode->prev = current;
     newNode->next = current->next;
     current->next->prev = newNode;
     current->next = newNode;
+    return newNode;
 }
 
 void printNodes(Node* current){
@@ -79,7 +80,10 @@ void setup() {
     arduboy.clear();
     Node* head = new Node();
     head->data = atoms[0];
-    for(int i = 0; i < count; i++){
+    head->prev = head;
+    head->next = head;
+    
+    for(int i = 1; i < count; i++){
         insertNode(head, atoms[i]);
     }
     
