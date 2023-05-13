@@ -1,16 +1,21 @@
 // Use this to get hex file:
-// arduino-cli compile --fqbn arduboy:avr:arduboy .\calculations.ino --output-dir ./
+// arduino-cli compile --fqbn arduboy:avr:arduboy .\a_calculations.ino --output-dir .\build\
 
-// #include <Arduboy2.h>
+#include <Arduboy2.h>
 // Arduboy2 arduboy;
 // -1 is a plus
 // int count = 8;
 // Need some way to make this array wrap around
 // Maybe I can just make it big and use modulo some how
-
+Arduboy2 arduboy;
 extern int atoms[50] = {1,2,-1,2,1};
 extern int count = 5;
-
+class Node {
+  public:
+    int data;
+    Node *prev;
+    Node *next;
+};
 void moveElements(int arr[], int n, int start, int moveBy)
 {
     if (moveBy >= 0)

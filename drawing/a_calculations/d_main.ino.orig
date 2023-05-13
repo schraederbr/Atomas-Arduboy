@@ -1,0 +1,66 @@
+// Use this to get hex file:
+// arduino-cli compile --fqbn arduboyD:avr:arduboyD .\drawing.ino --output-dir ./
+#include <Arduboy2.h>
+Arduboy2 arduboyD;
+void setup() {
+    arduboyD.begin();
+    arduboyD.clear();
+    // for(int i = 0; i < count; i++){
+    //     list.addNode(atoms[i]);
+    // }
+    // list.printList();
+    //list.processList();
+    //list.printList();
+    //Print all atoms with a for loop
+    arduboyD.print(count);
+    arduboyD.print(" Atoms: ");
+    for(int i = 0; i < count; i++){
+        arduboyD.print(atoms[i]);
+    }
+    arduboyD.print("\n");
+	//for(int i = 0; i < count; i++){
+		recAdd(atoms, 8);
+	//}
+    
+    arduboyD.display();
+}
+// void setup(){
+
+// }
+void loop()
+{
+	arduboyD.pollButtons();
+	if (arduboyD.justPressed(A_BUTTON))
+	{
+		addAtom(index + 1, nextNum);
+		generateAtomNum();
+	}
+
+	if (arduboyD.justPressed(LEFT_BUTTON))
+	{
+		if (index > 0)
+		{
+			index--;
+		}
+		else
+		{
+			index = count - 1;
+		}
+	}
+
+	if (arduboyD.justPressed(RIGHT_BUTTON))
+	{
+		if (index < count - 1)
+		{
+			index++;
+		}
+		else
+		{
+			index = 0;
+		}
+	}
+	arduboyD.clear();
+	drawAtoms(atoms);
+	drawLine();
+	arduboyD.display();
+}

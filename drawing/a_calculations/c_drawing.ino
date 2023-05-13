@@ -1,14 +1,14 @@
 // Use this to get hex file:
-// arduino-cli compile --fqbn arduboy:avr:arduboy .\drawing.ino --output-dir ./
+// arduino-cli compile --fqbn arduboyC:avr:arduboyC .\drawing.ino --output-dir ./
 #include <Arduboy2.h>
-Arduboy2 arduboy;
+Arduboy2 arduboyC;
 int centerX = 64;
 int centerY = 32;
 int radius = 24;
 int baseNum = 1;
 int index = 0;
 int nextNum = 1;
-int nums[50] = {1};
+//int nums[50] = {1};
 extern int count;
 extern int atoms[];
 // degrees * pi/180
@@ -17,9 +17,9 @@ extern int atoms[];
 
 void drawCircleNumber(int x, int y, int num)
 {
-	arduboy.drawCircle(x, y, 5, WHITE);
-	arduboy.setCursor(x - 2, y - 3);
-	arduboy.print(num);
+	arduboyC.drawCircle(x, y, 5, WHITE);
+	arduboyC.setCursor(x - 2, y - 3);
+	arduboyC.print(num);
 }
 
 void drawAtom(int i, int num)
@@ -47,7 +47,7 @@ void drawLine()
 
 void drawLineOnCircle(float angle)
 {
-	arduboy.drawLine(centerX, centerY, centerX + cos(angle) * radius, centerY + sin(angle) * radius, WHITE);
+	arduboyC.drawLine(centerX, centerY, centerX + cos(angle) * radius, centerY + sin(angle) * radius, WHITE);
 	return;
 }
 
@@ -56,9 +56,9 @@ void addAtom(int i, int num)
 	count++;
 	for (int j = count - 1; j > i; j--)
 	{
-		nums[j] = nums[j - 1];
+		atoms[j] = atoms[j - 1];
 	}
-	nums[i] = num;
+	atoms[i] = num;
 }
 
 void generateAtomNum()
@@ -68,8 +68,8 @@ void generateAtomNum()
 }
 
 // void setup() {
-//     arduboy.begin();
-//     arduboy.clear();
+//     arduboyC.begin();
+//     arduboyC.clear();
 //     // for(int i = 0; i < count; i++){
 //     //     list.addNode(atoms[i]);
 //     // }
@@ -77,31 +77,31 @@ void generateAtomNum()
 //     //list.processList();
 //     //list.printList();
 //     //Print all atoms with a for loop
-//     arduboy.print(count);
-//     arduboy.print(" Atoms: ");
+//     arduboyC.print(count);
+//     arduboyC.print(" Atoms: ");
 //     for(int i = 0; i < count; i++){
-//         arduboy.print(atoms[i]);
+//         arduboyC.print(atoms[i]);
 //     }
-//     arduboy.print("\n");
+//     arduboyC.print("\n");
 // 	//for(int i = 0; i < count; i++){
 // 		recAdd(atoms, 8);
 // 	//}
     
-//     arduboy.display();
+//     arduboyC.display();
 // }
 // // void setup(){
 
 // // }
 // void loop()
 // {
-// 	arduboy.pollButtons();
-// 	if (arduboy.justPressed(A_BUTTON))
+// 	arduboyC.pollButtons();
+// 	if (arduboyC.justPressed(A_BUTTON))
 // 	{
 // 		addAtom(index + 1, nextNum);
 // 		generateAtomNum();
 // 	}
 
-// 	if (arduboy.justPressed(LEFT_BUTTON))
+// 	if (arduboyC.justPressed(LEFT_BUTTON))
 // 	{
 // 		if (index > 0)
 // 		{
@@ -113,7 +113,7 @@ void generateAtomNum()
 // 		}
 // 	}
 
-// 	if (arduboy.justPressed(RIGHT_BUTTON))
+// 	if (arduboyC.justPressed(RIGHT_BUTTON))
 // 	{
 // 		if (index < count - 1)
 // 		{
@@ -124,8 +124,8 @@ void generateAtomNum()
 // 			index = 0;
 // 		}
 // 	}
-// 	arduboy.clear();
+// 	arduboyC.clear();
 // 	drawAtoms(nums);
 // 	drawLine();
-// 	arduboy.display();
+// 	arduboyC.display();
 // }
