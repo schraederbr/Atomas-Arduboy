@@ -7,7 +7,6 @@ int centerY = 32;
 int radius = 24;
 int baseNum = 1;
 int index = 0;
-int nextNum = 1;
 //int nums[50] = {1};
 extern int count;
 extern int atoms[];
@@ -51,21 +50,7 @@ void drawLineOnCircle(float angle)
 	return;
 }
 
-void addAtom(int i, int num)
-{
-	count++;
-	for (int j = count - 1; j > i; j--)
-	{
-		atoms[j] = atoms[j - 1];
-	}
-	atoms[i] = num;
-}
 
-void generateAtomNum()
-{
-	nextNum = baseNum;
-	baseNum++;
-}
 
 // void setup() {
 //     arduboyC.begin();

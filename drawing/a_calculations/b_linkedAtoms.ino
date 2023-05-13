@@ -6,49 +6,8 @@ Arduboy2 arduboyB;
 
 extern int count;
 extern int atoms[];
-// void evaluateAtoms(DoublyLinkedList l){
-//     Node* current = l.head;
-//     int steps = 0;
-//     while(current->data != -1){
-//         current = current->next;
-//         steps++;
-//         if(steps > count){
-//             return;
-//         }
-//     }
-//     if(current->data != -1){
-//         //This should never happen
-//     }
-//     evaluatePlus(l, current);
 
-// }
 
-// void evaluatePlus(DoublyLinkedList l, Node* current){
-//     if(current->prev->data == current->next->data){
-//         current->data = current->prev->data + 1;
-//         current->prev->data = 0;
-//         current->next->data = 0;
-//     }
-// }
-
-// void deleteZeros(DoublyLinkedList l, int steps){
-//     Node* current = l.head;
-//     while(steps < count){
-//         steps++;
-//         Node* nextNode = current->next;
-//         if(current->data == 0){
-//             l.removeNode(current);
-//             count--;
-//             steps--;
-//             deleteZeros(l, steps);
-//         }  
-//         current = nextNode;
-        
-//     }
-    
-// }
-
-//Need to make sure this is circular
 Node* insertNode(Node* current, int value){
     Node* newNode = new Node();
     newNode->data = value;
@@ -57,6 +16,12 @@ Node* insertNode(Node* current, int value){
     current->next->prev = newNode;
     current->next = newNode;
     return newNode;
+}
+
+void removeNode(Node* current){
+    current->prev->next = current->next;
+    current->next->prev = current->prev;
+    delete current;
 }
 
 void printNodes(Node* current){
@@ -88,6 +53,56 @@ void arrayToNodes(int as[], int count, Node* current){
         insertNode(current, atoms[i]);
     }
 }
+
+
+
+
+// void evaluateAtoms(Node* current){
+//     int steps = 0;
+//     while(current->data != -1){
+//         current = current->next;
+//         steps++;
+//         if(steps > count){
+//             return;
+//         }
+//     }
+//     if(current->data != -1){
+//         //This should never happen
+//     }
+//     evaluatePlus(current);
+
+// }
+
+// void evaluatePlus(Node* current){
+//     if(current->prev->data == current->next->data){
+//         current->data = current->prev->data + 1;
+//         current->prev->data = 0;
+//         current->next->data = 0;
+//     }
+// }
+
+// void deleteZeros(Node* current){
+//     deleteZeros(current, 0);
+// }
+
+void deleteZeros(Node* current, int steps){
+    while(steps < count){
+        steps++;
+        Node* nextNode = current->next;
+        if(current->data == 0){
+            removeNode(current);
+            count--;
+            steps--;
+            deleteZeros(current, steps);
+        }  
+        current = nextNode;
+    }
+    
+}
+
+
+
+
 // void setup() {
 //     arduboyB.begin();
 //     arduboyB.clear();
