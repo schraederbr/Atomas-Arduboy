@@ -2,18 +2,15 @@
 // arduino-cli compile --fqbn arduboy:avr:arduboy .\a_calculations.ino --output-dir .\build\
 
 #include <Arduboy2.h>
-// Arduboy2 arduboy;
-// -1 is a plus
-// int count = 8;
-// Need some way to make this array wrap around
-// Maybe I can just make it big and use modulo some how
 Arduboy2 arduboy;
 //Broken Maybe:
 // extern int atoms[50] = {4,3,2,1,4,3,5,-1,5,4,1,2};
 // extern int count = 12;
 extern int atoms[50] = {1};
 extern int count = 1;
+extern int sincePlus = 0;
 int nextNum = 1;
+extern int index = 0;
 class Node {
   public:
     int data;
@@ -28,69 +25,11 @@ void generateAtomNum()
     if(random(1,5) == 1){
         nextNum = -1;
     }
-}
-
-void moveElements(int arr[], int n, int start, int moveBy)
-{
-    if (moveBy >= 0)
-    {
-        for (int i = gi(n - 1); i >= gi(start); gi(i--))
-        {
-            arr[gi(i + moveBy)] = arr[gi(i)];
-        }
+    if(sincePlus > 4){
+        nextNum = -1;
+        sincePlus = 0;
     }
-    else
-    {
-        for (int i = gi(start); i < gi(n); gi(i++))
-        {
-            arr[gi(i + moveBy)] = arr[gi(i)];
-        }
-    }
-}
-
-// Stands for get index
-int gi(int i)
-{
-    return i % count;
-}
-
-void recAdd(int as[], int i)
-{
-    if (count == 1)
-    {
-        return;
-    }
-    if (as[gi(i - 1)] != as[gi(i + 1)])
-    {
-        return;
-    }
-    if (as[gi(i)] != -1)
-    {
-        arduboy.print("M");
-        if (as[gi(i - 1)] > as[gi(i)])
-        {
-            as[gi(i - 1)] = as[gi(i - 1)] + 2;
-        }
-        else
-        {
-            as[gi(i - 1)] = as[gi(i)] + 1;
-        }
-        
-        // moveElements(as, count, gi(i + 1), -1);
-        // count = count - 1;
-    }
-    else{
-        as[gi(i - 1)] = as[gi(i - 1)] + 1;
-        
-    }
-    moveElements(as, count, gi(i + 2), -2);
-    count = count - 2;
-    // as[gi(i)] = 0;
-    // as[gi(i + 1)] = 0;
-    
-    
-    printArray(as);
-    recAdd(as, i - 1);
+    sincePlus++;
 }
 
 void printArray(int as[])
@@ -109,77 +48,91 @@ void printArray(int as[], int n)
     arduboy.print("\n");
 }
 
-int addAtoms(int left, int middle, int right)
-{
-    if (left != right)
-    {
-        return middle;
-    }
-    // encountered a plus
-    if (middle == -1)
-    {
+void add(int atoms[], int i){
+	int left = atoms[(i - 1) % count];
+	int right = atoms[(i + 1) % count];
+	// arduboy.print("Index: ");
+	// arduboy.print("L: ");
+	// arduboy.print((i - 1) % count);
+	// arduboy.print(" R: ");
+	// arduboy.print((i + 1) % count);
+	// arduboy.println();
+	// arduboy.print("Values");
+	// arduboy.print("L: ");
+	// arduboy.print(left);
+	// arduboy.print(" R: ");
+	// arduboy.print(right);
+	// arduboy.println();
 
-        return left + 1;
-        count = count - 2;
-    }
-    // if(left > middle){
-    //     return left + 2;
-    // }
-    // if(left <= middle){
-    //     return middle + 1;
-    // }
-    return 0; // should never get here
+	if(left == right){
+		if(atoms[i % count] == -1){
+			atoms[i % count] = left + 1;
+		}
+		else{
+			if(left > atoms[i % count]){
+				atoms[i % count] = left + 2;
+			}
+			else{
+				atoms[i % count]++;
+			}
+		}
+		//This probably isn't perfect deleting is weird. Sometimes have to do i - 1 sometimes i - 2
+		atoms[(i - 1) % count] = 0;
+		atoms[(i + 1) % count] = 9;
+		deleteAtIndex(atoms, (i + 1) % count);
+		deleteAtIndex(atoms, (i - 1) % count);
+		//This if might not quite be right
+		if(count > 2){
+			printArray(atoms);
+			add(atoms, ((i - 2) % count));
+		}
+	}
+	else{
+		if(atoms[i % count] == -1){
+			atoms[i % count] == -2;
+		}
+	}
 }
 
-void calculatePlus(int atoms[], int i)
+void addAtom(int i, int num)
 {
-    int left = atoms[gi(i - 1)];
-    int middle = atoms[gi(i)];
-    int right = atoms[gi(i + 1)];
-    atoms[gi(i)] = addAtoms(left, middle, right);
+	count++;
+	for (int j = count - 1; j > i; j--)
+	{
+		atoms[j] = atoms[j - 1];
+	}
+	atoms[i] = num;
+	evaluatePlus(atoms);
 }
 
-void calculateTurn(int atoms[], int i)
-{
-    if (i > count)
-    {
-        return;
+void deleteAtIndex(int atoms[], int index) {
+    index = index % count;
+    for (int i = index; i < count - 1; ++i) {
+        atoms[i] = atoms[i + 1];
     }
-    for (i; i < count; i++)
-    {
-        if (atoms[i] == -1)
-        {
-            calculatePlus(atoms, i);
-            calculateTurn(atoms, i);
-        }
-    }
+	count--;
 }
 
-// void setup() {
-//     arduboy.begin();
-//     arduboy.clear();
-//     //Print all atoms with a for loop
-//     arduboy.print(count);
-//     arduboy.print(" Atoms: ");
-//     for(int i = 0; i < count; i++){
-//         arduboy.print(atoms[i]);
-//     }
-//     arduboy.print("\n");
-//     recAdd(atoms, 3);
-//     // arduboy.print("\n");
-//     // arduboy.print(count);
-//     // arduboy.print(" Atoms: ");
-//     // for(int i = 0; i < count; i++){
-//     //     arduboy.print(atoms[i]);
-//     // }
-//     // calculateTurn(atoms, 0);
-//     // arduboy.print("Atoms: ");
-//     // for(int i = 0; i < count; i++){
-//     //     arduboy.print(atoms[i]);
-//     // }
-//     arduboy.display();
-// }
 
-// void loop() {
+void evaluatePlus(int atoms[]){
+	//This is really janky, but it might work perfectly. It runs through the atoms a bunch of time. 
+		for(int i = 0; i < count * 10; i++){
+			if(atoms[i % count] == -1){
+				add(atoms, i % count);
+			}
+	}
+}
 
-// }
+bool hasPlus(int atoms[]){
+	return hasPlus(atoms, count);
+}
+
+bool hasPlus(int atoms[], int count){
+	for(int i = 0; i < count; i++){
+		if(atoms[i] == -1){
+			return true;
+		}
+	}
+	return false;
+}
+
