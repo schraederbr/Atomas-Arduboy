@@ -60,12 +60,34 @@ Node* insertNode(Node* current, int value){
 }
 
 void printNodes(Node* current){
-    for(int i = 0; i < count * 2; i++){
+    printNodes(current, count);
+}
+
+void printNodes(Node* current, int count){
+    arduboyB.print(count);
+    arduboyB.print(": ");
+    for(int i = 0; i < count; i++){
         arduboyB.print(current->data);
+        current = current->next;
+    }
+    arduboyB.println();
+}
+
+void nodesToArray(int as[], int count, Node* current){
+    for(int i = 0; i < count; i++){
+        as[i] = current->data;
         current = current->next;
     }
 }
 
+void arrayToNodes(int as[], int count, Node* current){
+    current->data = atoms[0];
+    current->prev = current;
+    current->next = current;
+    for(int i = 1; i < count; i++){
+        insertNode(current, atoms[i]);
+    }
+}
 // void setup() {
 //     arduboyB.begin();
 //     arduboyB.clear();

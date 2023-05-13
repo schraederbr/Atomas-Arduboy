@@ -16,6 +16,7 @@ class Node {
     Node *prev;
     Node *next;
 };
+
 void moveElements(int arr[], int n, int start, int moveBy)
 {
     if (moveBy >= 0)
@@ -81,9 +82,14 @@ void recAdd(int as[], int i)
 
 void printArray(int as[])
 {
-    arduboy.print(count);
-    arduboy.print(" Atoms: ");
-    for (int i = 0; i < count; i++)
+   printArray(as, count);
+}
+
+void printArray(int as[], int n)
+{
+    arduboy.print(n);
+    arduboy.print(": ");
+    for (int i = 0; i < n; i++)
     {
         arduboy.print(as[i]);
     }
