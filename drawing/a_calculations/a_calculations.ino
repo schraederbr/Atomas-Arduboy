@@ -22,6 +22,7 @@ class Node {
     Node *next;
 };
 
+
 void generateAtomNum()
 {
 	if(turn % 40 == 0){
@@ -60,9 +61,7 @@ void printArray(int as[], int n)
     }
     arduboy.print("\n");
 }
-// void add(int atoms[], int i){
-//     add(atoms, i, count);
-// }
+
 void add(int atoms[], int i){
     if(count < 3){
         return;
@@ -123,15 +122,7 @@ void add(int atoms[], int i){
 				add(atoms, ((i - 1) % count));
 			}
 		}
-		
-		
-		
 	}
-	// else{
-	// 	if(atoms[i % count] == -1){
-	// 		atoms[i % count] == -2;
-	// 	}
-	// }
 }
 
 void addAtom(int i, int num)
@@ -150,10 +141,6 @@ void addAtom(int i, int num)
 	
 }
 
-// void deleteAtIndex(int atoms[], int index) {
-//     deleteAtIndex(atoms, index, count);
-// }
-
 void deleteAtIndex(int atoms[], int index) {
     index = index % count;
     for (int i = index; i < count - 1; ++i) {
@@ -162,16 +149,12 @@ void deleteAtIndex(int atoms[], int index) {
     count--;
 }
 
-// void evaluatePlus(int atoms[]){
-//     evaluatePlus(atoms, count);
-// }
-
 void evaluatePlus(int atoms[]){
 	//This is really janky, but it might work perfectly. It runs through the atoms a bunch of time. 
-		for(int i = 0; i < count * 2; i++){
-			if(atoms[i % count] == -1){
-				add(atoms, i % count);
-			}
+	for(int i = 0; i < count * 4; i++){
+		if(atoms[i % count] == -1){
+			add(atoms, i % count);
+		}
 	}
 }
 

@@ -9,8 +9,16 @@ extern int count;
 extern int atoms[];
 // degrees * pi/180
 
+struct AtomAnimation{
+	int num;
+	int startX;
+	int startY;
+	int endX;
+	int endY;
+	int currentX;
+	int currentY;
 
-
+};
 void drawCircleNumber(int x, int y, int num)
 {
 	arduboy.drawCircle(x, y, 5, WHITE);
@@ -45,4 +53,22 @@ void drawLineOnCircle(float angle)
 {
 	arduboy.drawLine(centerX, centerY, centerX + cos(angle) * radius, centerY + sin(angle) * radius, WHITE);
 	return;
+}
+
+int lerp(int startValue, int endValue, int currentFrame, int totalFrames) {
+  return startValue + ((endValue - startValue) * currentFrame + totalFrames / 2) / totalFrames;
+}
+
+void setup(){
+	arduboy.begin();
+	arduboy.clear();
+	arduboy.setFrameRate(60);
+	AtomAnimation anim = {1, 64, 32, 96, 48, 64, 32};
+}
+
+void loop() {
+	if (!arduboy.nextFrame()) return;
+	arduboy.clear();
+	// Example usage of the lerp function
+	arduboy.display();
 }
