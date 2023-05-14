@@ -6,6 +6,8 @@ Arduboy2 arduboy;
 //Broken Maybe:
 // extern int atoms[50] = {4,3,2,1,4,3,5,-1,5,4,1,2};
 // extern int count = 12;
+bool animate = false;
+int prevAtoms[50];
 extern int atoms[50] = {1};
 extern int count = 1;
 extern bool plusEnabled = true;
@@ -20,6 +22,18 @@ class Node {
     int data;
     Node *prev;
     Node *next;
+};
+
+struct AtomAnimation{
+	int num;
+	int index;
+	int startX;
+	int startY;
+	int endX;
+	int endY;
+	int currentX;
+	int currentY;
+
 };
 
 
@@ -60,6 +74,12 @@ void printArray(int as[], int n)
         arduboy.print(as[i]);
     }
     arduboy.print("\n");
+}
+
+void deepCopyArray(int* source, int* dest, int size) {
+  for (int i = 0; i < size; i++) {
+    dest[i] = source[i];
+  }
 }
 
 void add(int atoms[], int i){
