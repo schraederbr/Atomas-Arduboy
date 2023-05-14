@@ -4,7 +4,7 @@
 int centerX = 64;
 int centerY = 32;
 int radius = 24;
-int baseNum = 1;
+
 extern int count;
 extern int atoms[];
 // degrees * pi/180
