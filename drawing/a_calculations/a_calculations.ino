@@ -47,22 +47,26 @@ void printArray(int as[], int n)
     }
     arduboy.print("\n");
 }
-
+// void add(int atoms[], int i){
+//     add(atoms, i, count);
+// }
 void add(int atoms[], int i){
+    if(count < 3){
+        return;
+    }
 	int left = atoms[(i - 1) % count];
 	int right = atoms[(i + 1) % count];
-	// arduboy.print("Index: ");
-	// arduboy.print("L: ");
-	// arduboy.print((i - 1) % count);
-	// arduboy.print(" R: ");
-	// arduboy.print((i + 1) % count);
-	// arduboy.println();
-	// arduboy.print("Values");
-	// arduboy.print("L: ");
-	// arduboy.print(left);
-	// arduboy.print(" R: ");
-	// arduboy.print(right);
-	// arduboy.println();
+	arduboy.print("I: ");
+	arduboy.print("L:");
+	arduboy.print((i - 1) % count);
+	arduboy.print(" R:");
+	arduboy.print((i + 1) % count);
+	arduboy.print("V");
+	arduboy.print("L:");
+	arduboy.print(left);
+	arduboy.print(" R:");
+	arduboy.print(right);
+	arduboy.println();
 
 	if(left == right){
 		if(atoms[i % count] == -1){
@@ -80,7 +84,7 @@ void add(int atoms[], int i){
 		atoms[(i - 1) % count] = 0;
 		atoms[(i + 1) % count] = 9;
 		deleteAtIndex(atoms, (i + 1) % count);
-		deleteAtIndex(atoms, (i - 1) % count);
+		deleteAtIndex(atoms, (i - 2) % count);
 		//This if might not quite be right
 		if(count > 2){
 			printArray(atoms);
@@ -105,18 +109,25 @@ void addAtom(int i, int num)
 	evaluatePlus(atoms);
 }
 
+// void deleteAtIndex(int atoms[], int index) {
+//     deleteAtIndex(atoms, index, count);
+// }
+
 void deleteAtIndex(int atoms[], int index) {
     index = index % count;
     for (int i = index; i < count - 1; ++i) {
         atoms[i] = atoms[i + 1];
     }
-	count--;
+    count--;
 }
 
+// void evaluatePlus(int atoms[]){
+//     evaluatePlus(atoms, count);
+// }
 
 void evaluatePlus(int atoms[]){
 	//This is really janky, but it might work perfectly. It runs through the atoms a bunch of time. 
-		for(int i = 0; i < count * 10; i++){
+		for(int i = 0; i < count * 2; i++){
 			if(atoms[i % count] == -1){
 				add(atoms, i % count);
 			}
