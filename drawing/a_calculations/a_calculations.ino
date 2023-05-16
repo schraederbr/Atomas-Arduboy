@@ -17,6 +17,8 @@ int baseNum = 1;
 int range = 3;
 int nextNum = 1;
 extern int index = 0;
+int frames = 0;
+int totalFrames = 60;
 class Node {
   public:
     int data;
@@ -26,13 +28,12 @@ class Node {
 
 struct AtomAnimation{
 	int num;
-	int index;
 	int startX;
 	int startY;
-	int endX;
-	int endY;
 	int currentX;
 	int currentY;
+	int endX;
+	int endY;
 
 };
 

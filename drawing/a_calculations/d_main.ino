@@ -35,6 +35,9 @@ void debugMode1(){
 	while(true){
 	}
 }
+
+
+
 void loop()
 {
 	if (!arduboy.nextFrame()) return;
@@ -59,6 +62,7 @@ void loop()
 			deepCopyArray(atoms, prevAtoms, count);
 			addAtom(index + 1, nextNum);
 			generateAtomNum();
+			preAnimate();
 			animate = true;
 	}
 

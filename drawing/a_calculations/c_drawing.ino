@@ -81,31 +81,66 @@ void setup(){
 	arduboy.setFrameRate(60);
 	
 }
+AtomAnimation anims[20];
+void preAnimate(){
+	for(int i = 0; i < count; i++){
+		int bx, by, fx, fy;
+		if(i <= index){
+			getXY(i, count-1,bx,by);
+			getXY(i, count, fx, fy);
+		}
+		else{
+			getXY(i, count-1,bx,by);
+			getXY(i + 1, count, fx, fy);
+		}
+		anims[i] = {atoms[i], bx,by,bx,by,fx,fy};
+	}
+	// for(int i = 0; i < count; i++){
+	// 	arduboy.print(anims[i].currentX);
+	// 	arduboy.print(anims[i].)
+	// }
+}
 
-
-
+//Need to loop added atom from the center the outside
 void animateLoop(){
 	arduboy.clear();
-	static AtomAnimation anims[20];
-	for(int i = 0; i <= index; i++){
-		int x1, y1;
-		getXY(i, count - 1, x1, y1);
-		int x2, y2;
-		getXY(i, count, x2, y2);
-		arduboy.print(x1);
-		arduboy.print(",");
-		arduboy.print(y1);
-		arduboy.println();
-		arduboy.print(x2);
-		arduboy.print(",");
-		arduboy.print(y2);
+	frames++;
+	for(int i = 0; i < count; i++){
+		updatePosition(anims[i], frames, totalFrames);
+		//drawCircleNumber(anims[i].currentX, anims[i].currentY, anims[i].num);
+		arduboy.drawCircle(anims[i].currentX, anims[i].currentY, 5, WHITE);
 		arduboy.display();
-		while(true){};
+		//delay(1000);
+	}
+	if(frames > totalFrames){
+		animate = false;
+		frames = 0;
+	}
+	
+}
+
+// void animateLoop(){
+// 	arduboy.clear();
+// 	static AtomAnimation anims[20];
+// 	for(int i = 0; i <= index; i++){
+// 		int x1, y1;
+// 		getXY(i, count - 1, x1, y1);
+// 		int x2, y2;
+// 		getXY(i, count, x2, y2);
+// 		arduboy.print(x1);
+// 		arduboy.print(",");
+// 		arduboy.print(y1);
+// 		arduboy.println();
+// 		arduboy.print(x2);
+// 		arduboy.print(",");
+// 		arduboy.print(y2);
+// 		arduboy.display();
+// 		while(true){};
 
 		
-	}
+// 	}
 
-}
+// }
 
 
 
