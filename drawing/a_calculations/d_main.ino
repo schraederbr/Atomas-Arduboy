@@ -3,10 +3,8 @@
 #include <Arduboy2.h>
 Node *current = new Node();
 
-extern int atoms[50];
 // int a[10] = {1, 4, 1, -1};
 // int co = 4;
-extern int count;
 int debugMode = 0;
 void mainSetup()
 {
@@ -60,10 +58,12 @@ void loop()
 	else{
 		if (arduboy.justPressed(A_BUTTON)){
 			deepCopyArray(atoms, prevAtoms, count);
+            oldCount = count;
 			addAtom(index + 1, nextNum);
 			generateAtomNum();
-			preAnimate();
-			animate = true;
+            //preAnimate();
+			
+			//animate = true;
 	}
 
 	if (arduboy.justPressed(LEFT_BUTTON)){

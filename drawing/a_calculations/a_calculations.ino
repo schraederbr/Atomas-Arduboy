@@ -6,19 +6,22 @@ Arduboy2 arduboy;
 //Broken Maybe:
 // extern int atoms[50] = {4,3,2,1,4,3,5,-1,5,4,1,2};
 // extern int count = 12;
-bool animate = false;
+
 int prevAtoms[50];
-extern int atoms[50] = {1};
-extern int count = 1;
-extern bool plusEnabled = true;
-extern int sincePlus = 0;
+int atoms[50] = {1};
+int count = 1;
+int oldCount = 0;
+bool plusEnabled = true;
+int sincePlus = 0;
 int turn = 0;
 int baseNum = 1;
 int range = 3;
 int nextNum = 1;
-extern int index = 0;
+int index = 0;
 int frames = 0;
 int totalFrames = 60;
+int animationCount = 0;
+bool animate = false;
 class Node {
   public:
     int data;
@@ -121,6 +124,7 @@ void add(int atoms[], int i){
 		//This probably isn't perfect deleting is weird. Sometimes have to do i - 1 sometimes i - 2
 		atoms[leftIndex] = 0;
 		atoms[(i + 1) % count] = 9;
+        preCombineAnimate();
 		if(i == 0){
 			deleteAtIndex(atoms, 1);
 			deleteAtIndex(atoms, count - 1);
