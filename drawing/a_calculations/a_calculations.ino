@@ -52,8 +52,9 @@ void generateAtomNum()
 		range++;
 	}
 	nextNum = random(baseNum,baseNum+range);
-    if(random(1,5) == 1){
+    if(random(1,10) == 1){
         nextNum = -1;
+		sincePlus = 0;
     }
 	int lowNums[count];
 	int lowNumsCount = 0;
