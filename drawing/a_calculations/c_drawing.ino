@@ -15,7 +15,19 @@ void drawCircleNumber(int x, int y, int num)
 {
 	arduboy.drawCircle(x, y, 5, WHITE);
 	arduboy.setCursor(x - 2, y - 3);
-	arduboy.print(num);
+	if(num == -1){
+		arduboy.print("+");
+	}
+	else if(num == -2){
+		arduboy.print("-");
+	}
+	else{
+		arduboy.print(num);
+	}
+	//This is to fill in the circle
+	//The print call deletes part of the cicle
+	arduboy.drawPixel(x + 3, y + 4);
+	
 }
 
 void drawAtom(int i, int num)
@@ -24,6 +36,7 @@ void drawAtom(int i, int num)
 	int x = centerX + cos(i * currentStep) * radius;
 	int y = centerY + sin(i * currentStep) * radius;
 	drawCircleNumber(x, y, num);
+
 }
 
 void drawAtoms(int nums[])
@@ -35,16 +48,26 @@ void drawAtoms(int nums[])
 	drawCircleNumber(centerX, centerY, nextNum);
 }
 
-void drawLine()
-{
-	float currentStep = 2 * PI / count;
-	drawLineOnCircle(index * currentStep + currentStep / 2);
+void drawLine(){
+	drawLine(0.5);
 }
 
-void drawLineOnCircle(float angle)
+//Inverse. offset is on the bottom of division
+void drawLine(float offset)
 {
-	arduboy.drawLine(centerX, centerY, centerX + cos(angle) * radius, centerY + sin(angle) * radius, WHITE);
+	float currentStep = 2 * PI / count;
+	drawLineOnCircle(index * currentStep + (currentStep * offset), 10, radius);
+}
+
+void drawLineOnCircle(float angle, int innerRadius, int outerRadius)
+{
+	arduboy.drawLine(centerX + cos(angle) * innerRadius, centerY + sin(angle) * innerRadius, centerX + cos(angle) * outerRadius, centerY + sin(angle) * outerRadius, WHITE);
 	return;
+}
+
+void drawTurn(){
+	arduboy.setCursor(3,3);
+	arduboy.print(turn);
 }
 
 void getXY(int i, int count, int centerX, int centerY, int radius, int &outX, int &outY){

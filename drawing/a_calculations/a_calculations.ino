@@ -21,6 +21,7 @@ int index = 0;
 int frames = 0;
 int totalFrames = 60;
 int animationCount = 0;
+bool inMinus = false;
 bool animate = false;
 class Node {
   public:
@@ -45,22 +46,35 @@ void generateAtomNum()
 {
 	if(turn % 40 == 0){
 		baseNum++;
+		
+	}
+	if(turn % 150 == 0){
 		range++;
 	}
 	nextNum = random(baseNum,baseNum+range);
     if(random(1,5) == 1){
         nextNum = -1;
     }
+	int lowNums[count];
+	int lowNumsCount = 0;
 	for(int i = 0; i < count; i++){
-		if(atoms[i] < baseNum){
-			//Have a change that numbers below basenum will spawn
-			//If they are already in the circle
+		if(atoms[i] < baseNum && atoms[i] != -1 && atoms[i] != -2){
+			lowNums[lowNumsCount] = atoms[i];
+			lowNumsCount++;
 		}
 	}
-    if(sincePlus > 4){
+	//This might not be perfect
+	if(random(0,count) < lowNumsCount){
+		nextNum = lowNums[random(0,lowNumsCount)];
+	}
+
+    if(sincePlus > 5){
         nextNum = -1;
         sincePlus = 0;
     }
+	if(turn % 20 == 0){
+		nextNum = -2;
+	}
     sincePlus++;
 }
 

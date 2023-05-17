@@ -40,7 +40,13 @@ void setup(){
 	arduboy.setFrameRate(60);
 	
 }
-
+void doMinus(){
+	deepCopyArray(atoms, prevAtoms, count);
+	oldCount = count;
+	nextNum = atoms[index];
+	deleteAtIndex(atoms,index);
+	inMinus = true;
+}
 void loop()
 {
 	if (!arduboy.nextFrame()) return;
@@ -48,9 +54,7 @@ void loop()
 	if(arduboy.justPressed(DOWN_BUTTON)){
 		plusEnabled = !plusEnabled;
 	}
-	if (arduboy.justPressed(B_BUTTON)){
-		debugMode = 1;
-	}
+	
 	if (debugMode == 1){
 		debugMode1();
 	}
@@ -62,38 +66,56 @@ void loop()
 	}
 	else{
 		if (arduboy.justPressed(A_BUTTON)){
-			deepCopyArray(atoms, prevAtoms, count);
-            oldCount = count;
-			addAtom(index + 1, nextNum);
-			generateAtomNum();
-            //preAnimate();
-			
-			//animate = true;
-	}
+			if(nextNum != -2){
+				deepCopyArray(atoms, prevAtoms, count);
+				oldCount = count;
+				addAtom(index + 1, nextNum);
+				generateAtomNum();
+				//preAnimate();
+				
+				//animate = true;
+			}
+			else if(nextNum == -2){
+				doMinus();
+			}
+				
+		}
+		if (arduboy.justPressed(B_BUTTON)){
+			if(inMinus){
+				nextNum = -1;
+				inMinus = false;
+			}
+			else{
+				debugMode = 1;
+			}
+		}
+		if (arduboy.justPressed(LEFT_BUTTON)){
+			if (index > 0){
+				index--;
+			}
+			else{
+				index = count - 1;
+			}
+		}
 
-	if (arduboy.justPressed(LEFT_BUTTON)){
-		if (index > 0){
-			index--;
+		if (arduboy.justPressed(RIGHT_BUTTON)){
+			if (index < count - 1){
+				index++;
+			}
+			else{
+				index = 0;
+			}
+		}
+		arduboy.clear();
+		drawAtoms(atoms);
+		drawTurn();
+		if(nextNum == -2){
+			drawLine(0);
 		}
 		else{
-			index = count - 1;
+			drawLine(0.5);
 		}
-	}
-
-	if (arduboy.justPressed(RIGHT_BUTTON)){
-		if (index < count - 1){
-			index++;
-		}
-		else{
-			index = 0;
-		}
-	}
-	arduboy.clear();
-	drawAtoms(atoms);
-	if (count != 0){
-		drawLine();
-	}
-	arduboy.display();
+		arduboy.display();
 	}
 	
 }
