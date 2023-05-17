@@ -34,7 +34,12 @@ void debugMode1(){
 	}
 }
 
-
+void setup(){
+	arduboy.begin();
+	arduboy.clear();
+	arduboy.setFrameRate(60);
+	
+}
 
 void loop()
 {

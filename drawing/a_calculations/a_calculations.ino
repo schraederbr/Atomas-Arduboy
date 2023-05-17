@@ -86,6 +86,7 @@ void deepCopyArray(int* source, int* dest, int size) {
   }
 }
 
+//This might not work when combining into a single atom
 void add(int atoms[], int i){
     if(count < 3){
         return;
@@ -124,7 +125,7 @@ void add(int atoms[], int i){
 		//This probably isn't perfect deleting is weird. Sometimes have to do i - 1 sometimes i - 2
 		atoms[leftIndex] = 0;
 		atoms[(i + 1) % count] = 9;
-        preCombineAnimate();
+        //preCombineAnimate();
 		if(i == 0){
 			deleteAtIndex(atoms, 1);
 			deleteAtIndex(atoms, count - 1);
@@ -176,6 +177,7 @@ void deleteAtIndex(int atoms[], int index) {
 
 void evaluatePlus(int atoms[]){
 	//This is really janky, but it might work perfectly. It runs through the atoms a bunch of time. 
+	//May need to adjust the count multiplier
 	for(int i = 0; i < count * 4; i++){
 		if(atoms[i % count] == -1){
 			add(atoms, i % count);
