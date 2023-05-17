@@ -1,5 +1,5 @@
 # Atomas-Arduboy
-Unofficial port of the mobile game Atomas by Sirnic Interactive to the Arduboy
+Unofficial port of the mobile game [Atomas by Sirnic Interactive](http://sirnic.com/atomas/) to the Arduboy
 
 Play it here: https://schraederbr.github.io/
 
