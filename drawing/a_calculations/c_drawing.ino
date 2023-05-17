@@ -7,10 +7,6 @@ int radius = 24;
 
 // degrees * pi/180
 
-
-
-
-
 void drawCircleNumber(int x, int y, int num)
 {
 	arduboy.drawCircle(x, y, 5, WHITE);
