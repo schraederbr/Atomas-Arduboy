@@ -15,7 +15,7 @@ bool plusEnabled = true;
 int sincePlus = 0;
 int turn = 0;
 int baseNum = 1;
-int range = 3;
+int range = 4;
 int nextNum = 1;
 int index = 0;
 int frames = 0;
@@ -46,7 +46,6 @@ void generateAtomNum()
 {
 	if(turn % 40 == 0){
 		baseNum++;
-		
 	}
 	if(turn % 150 == 0){
 		range++;
