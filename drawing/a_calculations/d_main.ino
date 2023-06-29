@@ -6,6 +6,8 @@ Node *current = new Node();
 // int a[10] = {1, 4, 1, -1};
 // int co = 4;
 int debugMode = 0;
+
+
 void mainSetup()
 {
 	//Works
@@ -47,6 +49,45 @@ void doMinus(){
 	deleteAtIndex(atoms,index);
 	inMinus = true;
 }
+
+void loseGame(){
+    arduboy.clear();
+    arduboy.print("You lasted ");
+    arduboy.print(turn);
+    arduboy.print(" turns");
+    arduboy.display();
+    while(true){
+        arduboy.pollButtons();
+        if(arduboy.justPressed(A_BUTTON) | arduboy.justPressed(B_BUTTON)){
+            fullReset();
+            return;
+        }
+    }
+}
+
+//Might need to randomize the seed. Or that could just be the emulator.
+void fullReset(){
+    for(int i = 0; i < count; i++){
+        atoms[i] = 0;
+        prevAtoms[i] = 0;
+    }
+    atoms[0] = 1;
+    count = 1;
+    oldCount = 0;
+    plusEnabled = true;
+    sincePlus = 0;
+    turn = 0;
+    baseNum = 1;
+    range = 4;
+    nextNum = 1;
+    index = 0;
+    frames = 0;
+    totalFrames = 60;
+    animationCount = 0;
+    inMinus = false;
+    animate = false;
+}
+
 void loop()
 {
 	if (!arduboy.nextFrame()) return;
@@ -106,6 +147,9 @@ void loop()
 				index = 0;
 			}
 		}
+        if(count > 16){
+            loseGame();
+        }
 		arduboy.clear();
 		drawAtoms(atoms);
 		drawTurn();

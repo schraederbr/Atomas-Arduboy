@@ -35,7 +35,8 @@ void preCombineAnimate(){
     //May be able to use count + 2 instead of oldCount
     int tempIndex = index - 1 < 0 ? count - 1 : index - 1;
     getXY(tempIndex, oldCount, bx, by);
-    getXY(index, oldCount, fx, fy);
+    //getXY(index, oldCount, fx, fy);
+    getXY(index, oldCount, 0.5, fx, fy);
     anims[0] = {n, bx, by, bx, by, fx, fy};
     //Use this more
     tempIndex = index + 1 < count ? index + 1 : 0;
