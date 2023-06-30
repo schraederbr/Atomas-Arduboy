@@ -7,8 +7,8 @@ Arduboy2 arduboy;
 // extern int atoms[50] = {4,3,2,1,4,3,5,-1,5,4,1,2};
 // extern int count = 12;
 
-int prevAtoms[50];
-int atoms[50] = {1};
+int prevAtoms[20];
+int atoms[20] = {1};
 int count = 1;
 int oldCount = 0;
 bool plusEnabled = true;

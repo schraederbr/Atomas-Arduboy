@@ -40,7 +40,7 @@ void setup(){
 	arduboy.begin();
 	arduboy.clear();
 	arduboy.setFrameRate(60);
-	
+	arduboy.initRandomSeed();
 }
 void doMinus(){
 	deepCopyArray(atoms, prevAtoms, count);
