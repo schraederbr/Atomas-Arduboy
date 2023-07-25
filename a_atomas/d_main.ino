@@ -1,5 +1,5 @@
 // Use this to get hex file:
-// arduino-cli compile --fqbn arduboy:avr:arduboy .\drawing.ino --output-dir ./
+// arduino-cli compile --fqbn arduboy:avr:arduboy .\a_atomas.ino --output-dir ./
 #include <Arduboy2.h>
 Node *current = new Node();
 

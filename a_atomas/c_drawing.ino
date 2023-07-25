@@ -1,5 +1,5 @@
 // Use this to get hex file:
-// arduino-cli compile --fqbn arduboy:avr:arduboy .\drawing.ino --output-dir ./
+// arduino-cli compile --fqbn arduboy:avr:arduboy .\a_atomas --output-dir ./
 #include <Arduboy2.h>
 int centerX = 64;
 int centerY = 32;

@@ -1,5 +1,5 @@
 // Use this to get hex file:
-// arduino-cli compile --fqbn arduboy:avr:arduboy .\drawing.ino --output-dir ./
+// arduino-cli compile --fqbn arduboy:avr:arduboy .\a_atomas --output-dir ./
 #include <Arduboy2.h>
 
 bool verify(int before[], int expected[], int c1, int c2)

@@ -1,5 +1,5 @@
 // Use this to get hex file:
-// arduino-cli compile --fqbn arduboy:avr:arduboy .\a_calculations.ino --output-dir .\build\
+// arduino-cli compile --fqbn arduboy:avr:arduboy .\a_atomas.ino --output-dir .\build\
 
 #include <Arduboy2.h>
 Arduboy2 arduboy;
