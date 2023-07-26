@@ -24,8 +24,8 @@ void preAnimate(){
 		anims[i] = {atoms[i], bx,by,bx,by,fx,fy};
 	}
 	// for(int i = 0; i < count; i++){
-	// 	arduboy.print(anims[i].currentX);
-	// 	arduboy.print(anims[i].)
+	// 	tinyfont.print(anims[i].currentX);
+	// 	tinyfont.print(anims[i].)
 	// }
 }
 
