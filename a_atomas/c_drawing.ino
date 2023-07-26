@@ -66,6 +66,38 @@ void drawTurn(){
 	arduboy.print(turn);
 }
 
+void drawSymmetry(){
+    
+}
+
+SymLine checkAllSymmetry(){
+    int largestSymmetry = 0;
+    for(int i = 0; i < count; i++){
+        int temp = findLargestSymmetry(i, count - 1, 0);
+        if(temp > largestSymmetry){
+            largestSymmetry = temp;
+        }
+    }
+    return {largestSymmetry, 0};
+}
+
+//Fix circular array
+//https://www.geeksforgeeks.org/circular-array/#
+int findLargestSymmetry(int start, int end, int c){
+    start = start % count;
+    end = end % count;
+    if(atoms[start] != atoms[end]){
+    //if(atoms[start] != atoms[end] || abs(start - end) > count){
+        
+        return c;
+    }
+    else if(atoms[start] == atoms[end]){
+        c++;
+    }
+    return findLargestSymmetry(start + 1, end - 1, c);
+
+}
+
 void getXY(int i, int count, float offset, int centerX, int centerY, int radius, int &outX, int &outY){
 	float currentStep = 2 * PI / count;
 	arduboy.print(currentStep);

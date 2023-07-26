@@ -41,6 +41,10 @@ struct AtomAnimation{
 
 };
 
+struct SymLine{
+    int count;
+    int start;
+};
 
 void generateAtomNum()
 {
@@ -112,17 +116,17 @@ void add(int atoms[], int i){
 	
 	int left = atoms[leftIndex];
 	int right = atoms[((i + 1) % count)];
-	arduboy.print("I: ");
-	arduboy.print("L:");
-	arduboy.print(leftIndex);
-	arduboy.print(" R:");
-	arduboy.print((i + 1) % count);
-	arduboy.print(" V: ");
-	arduboy.print("L:");
-	arduboy.print(left);
-	arduboy.print(" R:");
-	arduboy.print(right);
-	arduboy.println();
+	// arduboy.print("I: ");
+	// arduboy.print("L:");
+	// arduboy.print(leftIndex);
+	// arduboy.print(" R:");
+	// arduboy.print((i + 1) % count);
+	// arduboy.print(" V: ");
+	// arduboy.print("L:");
+	// arduboy.print(left);
+	// arduboy.print(" R:");
+	// arduboy.print(right);
+	// arduboy.println();
 
 	if(left == right && (left != -1 || right != -1)){
 		if(atoms[i % count] == -1){

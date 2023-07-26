@@ -25,12 +25,12 @@ void mainSetup()
 	arduboy.display();
 }
 void debugMode1(){
+    SymLine sym = checkAllSymmetry();
 	arduboy.clear();
 	printArray(atoms);
-	arduboy.display();
-	evaluatePlus(atoms);
-	arduboy.print("Final \n");
-	printArray(atoms);
+    arduboy.print("\n");
+    arduboy.print("Symmetry: ");
+    arduboy.print(sym.count);
 	arduboy.display();
 	while(true){
 	}
@@ -127,7 +127,7 @@ void loop()
 				inMinus = false;
 			}
 			else{
-				//debugMode = 1;
+				debugMode = 1;
 			}
 		}
 		if (arduboy.justPressed(LEFT_BUTTON)){
