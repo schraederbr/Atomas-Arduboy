@@ -25,12 +25,17 @@ void mainSetup()
 	arduboy.display();
 }
 void debugMode1(){
-    SymLine sym = checkAllSymmetry();
+    
 	arduboy.clear();
 	printArray(atoms);
     arduboy.print("\n");
     arduboy.print("Symmetry: ");
-    arduboy.print(sym.count);
+	int start, end;
+    arduboy.print(maxSymmetry(atoms, count, &start, &end));
+	arduboy.print("\n");
+	arduboy.print(start);
+	arduboy.print(" ");
+	arduboy.print(end);
 	arduboy.display();
 	while(true){
 	}
@@ -152,6 +157,7 @@ void loop()
         }
 		arduboy.clear();
 		drawAtoms(atoms);
+		drawSymmetry();
 		drawTurn();
 		if(nextNum == -2){
 			drawLine(0);

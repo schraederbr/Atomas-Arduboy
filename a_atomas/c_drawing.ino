@@ -32,8 +32,9 @@ void drawAtom(int i, int num)
 	int x = centerX + cos(i * currentStep) * radius;
 	int y = centerY + sin(i * currentStep) * radius;
 	drawCircleNumber(x, y, num);
-
 }
+
+
 
 void drawAtoms(int nums[])
 {
@@ -66,37 +67,53 @@ void drawTurn(){
 	arduboy.print(turn);
 }
 
-void drawSymmetry(){
-    
+void getXYFromIndex(int i, int &outX, int &outY)
+{
+	float currentStep = 2 * PI / count;
+	outX = centerX + cos(i * currentStep) * radius;
+	outY = centerY + sin(i * currentStep) * radius;
 }
 
-SymLine checkAllSymmetry(){
-    int largestSymmetry = 0;
-    for(int i = 0; i < count; i++){
-        int temp = findLargestSymmetry(i, count - 1, 0);
-        if(temp > largestSymmetry){
-            largestSymmetry = temp;
+//This draws too many lines but kinda works
+void drawSymmetry(){
+    int start, end;
+	int maxSym = maxSymmetry(atoms, count, &start, &end);
+	if(maxSym > 0){
+		arduboy.drawLine(centerX, centerY, centerX + cos(start * 2 * PI / count) * radius, centerY + sin(start * 2 * PI / count) * radius, WHITE);
+		arduboy.drawLine(centerX, centerY, centerX + cos(end * 2 * PI / count) * radius, centerY + sin(end * 2 * PI / count) * radius, WHITE);
+	}
+	int x0, y0, x1, y1;
+	for(int i = 0; i < maxSym; i++){
+		getXYFromIndex((start + i) % count, x0, y0);
+		getXYFromIndex((start + i + 1) % count, x1, y1);
+		arduboy.drawLine(x0, y0, x1, y1, WHITE);
+	}
+}
+
+//This was auto generated, double check it
+int maxSymmetry(int arr[], int len, int *start, int *end){
+    int max_sym = 0;
+    *start = *end = 0;
+    for(int i = 0; i < len; i++){
+        for(int k = 2; k <= len; k+=2){
+            int count = 0;
+            for(int j = 0; j < k/2; j++){
+                if(arr[(i+j)%len] == arr[(i+k-j-1)%len]){
+                    count++;
+                } else {
+                    break;
+                }
+            }
+            if(count == k/2 && k > max_sym){
+                max_sym = k;
+                *start = i;
+                *end = (i+k-1)%len;
+            }
         }
     }
-    return {largestSymmetry, 0};
+	return max_sym;
 }
 
-//Fix circular array
-//https://www.geeksforgeeks.org/circular-array/#
-int findLargestSymmetry(int start, int end, int c){
-    start = start % count;
-    end = end % count;
-    if(atoms[start] != atoms[end]){
-    //if(atoms[start] != atoms[end] || abs(start - end) > count){
-        
-        return c;
-    }
-    else if(atoms[start] == atoms[end]){
-        c++;
-    }
-    return findLargestSymmetry(start + 1, end - 1, c);
-
-}
 
 void getXY(int i, int count, float offset, int centerX, int centerY, int radius, int &outX, int &outY){
 	float currentStep = 2 * PI / count;
