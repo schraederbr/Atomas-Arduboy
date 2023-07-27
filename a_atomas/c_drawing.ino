@@ -78,12 +78,8 @@ void getXYFromIndex(int i, int &outX, int &outY)
 void drawSymmetry(){
     int start, end;
 	int maxSym = maxSymmetry(atoms, count, &start, &end);
-	if(maxSym > 0){
-		arduboy.drawLine(centerX, centerY, centerX + cos(start * 2 * PI / count) * radius, centerY + sin(start * 2 * PI / count) * radius, WHITE);
-		arduboy.drawLine(centerX, centerY, centerX + cos(end * 2 * PI / count) * radius, centerY + sin(end * 2 * PI / count) * radius, WHITE);
-	}
 	int x0, y0, x1, y1;
-	for(int i = 0; i < maxSym; i++){
+	for(int i = 0; i < maxSym - 1; i++){
 		getXYFromIndex((start + i) % count, x0, y0);
 		getXYFromIndex((start + i + 1) % count, x1, y1);
 		arduboy.drawLine(x0, y0, x1, y1, WHITE);
