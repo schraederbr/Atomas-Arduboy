@@ -157,7 +157,7 @@ void loop()
         }
 		arduboy.clear();
 		drawAtoms(atoms);
-		drawSymmetry();
+		drawSymmetryStraight();
 		drawTurn();
 		if(nextNum == -2){
 			drawLine(0);

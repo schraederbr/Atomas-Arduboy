@@ -67,26 +67,33 @@ void drawTurn(){
 	arduboy.print(turn);
 }
 
-void getXYFromIndex(int i, int &outX, int &outY)
+//This should use the base getXY function
+void getXYFromIndex(int i, int rad, int &outX, int &outY)
 {
 	float currentStep = 2 * PI / count;
-	outX = centerX + cos(i * currentStep) * radius;
-	outY = centerY + sin(i * currentStep) * radius;
+	outX = centerX + cos(i * currentStep) * rad;
+	outY = centerY + sin(i * currentStep) * rad;
 }
 
-//This draws too many lines but kinda works
-void drawSymmetry(){
+// This needs to ignore pluses
+// Draws symmetry with straight lines
+void drawSymmetryStraight(){
     int start, end;
 	int maxSym = maxSymmetry(atoms, count, &start, &end);
 	int x0, y0, x1, y1;
 	for(int i = 0; i < maxSym - 1; i++){
-		getXYFromIndex((start + i) % count, x0, y0);
-		getXYFromIndex((start + i + 1) % count, x1, y1);
+		getXYFromIndex((start + i) % count, 16, x0, y0);
+		getXYFromIndex((start + i + 1) % count, 16, x1, y1);
 		arduboy.drawLine(x0, y0, x1, y1, WHITE);
 	}
 }
 
-//This was auto generated, double check it
+// Draws symmetry with a partial circle
+// void drawSymmetryCircle()
+
+//Need to make this ignore pluses. At least if plus is in the middle
+//There might be other cases where pluses should be considered. Like 2+11. 
+//Not sure if the actual game does that
 int maxSymmetry(int arr[], int len, int *start, int *end){
     int max_sym = 0;
     *start = *end = 0;
@@ -113,8 +120,6 @@ int maxSymmetry(int arr[], int len, int *start, int *end){
 
 void getXY(int i, int count, float offset, int centerX, int centerY, int radius, int &outX, int &outY){
 	float currentStep = 2 * PI / count;
-	arduboy.print(currentStep);
-	arduboy.println();
 	outX = centerX + cos((i * currentStep) + (currentStep * offset)) * radius;
 	outY = centerY + sin(i * currentStep) * radius;
 }
