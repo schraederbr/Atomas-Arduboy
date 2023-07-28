@@ -91,9 +91,6 @@ void drawSymmetryCircle() {
         getXYFromIndex(float(start + maxSym / 2) - 0.5, innerRadius, x0, y0);
 	    arduboy.fillCircle(x0, y0, 2, WHITE);
     }
-    
-
-
 }
 
 
@@ -147,7 +144,6 @@ int maxSymmetry(int arr[], int len, int *start, int *end) {
 	}
 	return max_sym;
 }
-
 
 
 int lerp(int startValue, int endValue, int currentFrame, int totalFrames) {

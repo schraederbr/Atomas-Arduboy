@@ -4,11 +4,13 @@
 #include <Arduboy2.h>
 #include <EEPROM.h>
 Arduboy2 arduboy;
-#define EEPROM_START 512
+//This is just after the EEPROM claimed by the LATE multi game.
+#define EEPROM_START 848
+
 //Should randomly start with 2-6 atoms or something like that
 int prevAtoms[20];
-int atoms[20] = {1};
-int count = 1;
+int atoms[20] = {3,5,5,3};
+int count = 4;
 int oldCount = 0;
 bool plusEnabled = true;
 int sincePlus = 0;
@@ -115,17 +117,6 @@ void add(int atoms[], int i){
 	
 	int left = atoms[leftIndex];
 	int right = atoms[((i + 1) % count)];
-	// arduboy.print("I: ");
-	// arduboy.print("L:");
-	// arduboy.print(leftIndex);
-	// arduboy.print(" R:");
-	// arduboy.print((i + 1) % count);
-	// arduboy.print(" V: ");
-	// arduboy.print("L:");
-	// arduboy.print(left);
-	// arduboy.print(" R:");
-	// arduboy.print(right);
-	// arduboy.println();
 
 	if(left == right && (left != -1 || right != -1)){
 		if(atoms[i % count] == -1){
@@ -181,7 +172,6 @@ void addAtom(int i, int num)
 	if(plusEnabled){
 		evaluatePlus(atoms);
 	}
-	
 }
 
 void deleteAtIndex(int atoms[], int index) {
@@ -193,8 +183,8 @@ void deleteAtIndex(int atoms[], int index) {
 }
 
 void evaluatePlus(int atoms[]){
-	//This is really janky, but it might work perfectly. It runs through the atoms a bunch of time. 
-	//May need to adjust the count multiplier
+	//This is really janky, but it might be fine. It runs through the atoms a bunch of time. 
+	//May want to adjust the count multiplier
 	for(int i = 0; i < count * 10; i++){
 		if(atoms[i % count] == -1){
 			add(atoms, i % count);
@@ -213,6 +203,32 @@ bool hasPlus(int atoms[], int count){
 		}
 	}
 	return false;
+}
+
+//This isn't accurate yet
+int calculateScore(int* atoms, int size) {
+    int score = 0;
+    int reactions = 0;
+
+    for(int i = 1; i < size - 1; i+= 2) {
+        int Z = atoms[i];
+        int Zo1 = atoms[i - 1];
+        int Zo2 = atoms[i + 1];
+
+        reactions++;
+        double M = 1 + 0.5 * (reactions - 1); 
+
+        if (Zo1 >= Z || Zo2 >= Z) {
+            Z += 2;
+        } else {
+            Z++;
+        }
+        
+        int Sr = floor(M * (Z + 1));
+        score += Sr; 
+    }
+
+    return score;
 }
 
 void saveScore(){

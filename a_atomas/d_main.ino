@@ -3,8 +3,6 @@
 #include <Arduboy2.h>
 Node *current = new Node();
 
-// int a[10] = {1, 4, 1, -1};
-// int co = 4;
 int debugMode = 0;
 
 
@@ -39,6 +37,18 @@ void debugMode1(){
 	arduboy.display();
 	while(true){
 	}
+}
+
+void debugMode2(){
+    arduboy.clear();
+    printArray(atoms);
+    arduboy.print("\n");
+    int score = calculateScore(atoms, count);
+    arduboy.print("Score: ");
+    arduboy.print(score);
+    arduboy.display();
+    while(true){
+    }
 }
 
 void setup(){
@@ -109,6 +119,9 @@ void loop()
 	if (debugMode == 1){
 		debugMode1();
 	}
+    else if (debugMode == 2){
+        debugMode2();
+    }
 	if (debugMode != 0){
 		return;
 	}
@@ -137,7 +150,7 @@ void loop()
 				inMinus = false;
 			}
 			else{
-				//debugMode = 1;
+				debugMode = 2;
 			}
 		}
 		if (arduboy.justPressed(LEFT_BUTTON)){
