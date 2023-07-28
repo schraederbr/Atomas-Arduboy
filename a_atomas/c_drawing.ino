@@ -79,6 +79,8 @@ void drawSymmetryStraight() {
 }
 
 // This almost works. But tends to break when circle exceeds half of atoms
+// Seems like it tends to draw the circle one direction, and not the other. 
+// For example if two atom symmetry it will draw an entire full circle sometimes
 void drawSymmetryCircle() {
 	int start, end;
 	int maxSym = maxSymmetry(atoms, count, &start, &end);
