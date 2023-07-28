@@ -4,7 +4,25 @@
 
 // degrees * pi/180
 
+void getXY(int i, int count, float offset, int centerX, int centerY, int radius,
+		   int &outX, int &outY) {
+	float currentStep = 2 * PI / count;
+	outX = centerX + cos((i * currentStep) + (currentStep * offset)) * radius;
+	outY = centerY + sin(i * currentStep) * radius;
+}
 
+void getXY(int i, int count, int centerX, int centerY, int radius, int &outX,
+		   int &outY) {
+	getXY(i, count, 0, centerX, centerY, radius, outX, outY);
+}
+
+void getXY(int i, int count, int &outX, int &outY) {
+	getXY(i, count, 0, centerX, centerY, radius, outX, outY);
+}
+
+void getXY(int i, int count, float offset, int &outX, int &outY) {
+	getXY(i, count, offset, centerX, centerY, radius, outX, outY);
+}
 
 AtomAnimation anims[20];
 void preAnimate(){

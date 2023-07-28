@@ -25,8 +25,8 @@ void drawCircleNumber(int x, int y, int num) {
 
 void drawAtom(int i, int num) {
 	float currentStep = 2 * PI / count;
-	int x = centerX + cos(i * currentStep) * radius;
-	int y = centerY + sin(i * currentStep) * radius;
+    int x, y;
+    getXYFromIndex(i, radius, x, y);
 	drawCircleNumber(x, y, num);
 }
 
@@ -36,8 +36,6 @@ void drawAtoms(int nums[]) {
 	}
 	drawCircleNumber(centerX, centerY, nextNum);
 }
-
-void drawLine() { drawLine(0.5); }
 
 // Inverse. offset is on the bottom of division
 void drawLine(float offset) {
@@ -50,7 +48,6 @@ void drawLineOnCircle(float angle, int innerRadius, int outerRadius) {
 					 centerY + sin(angle) * innerRadius,
 					 centerX + cos(angle) * outerRadius,
 					 centerY + sin(angle) * outerRadius, WHITE);
-	return;
 }
 
 void drawTurn() {
@@ -58,7 +55,6 @@ void drawTurn() {
 	arduboy.print(turn);
 }
 
-// This should use the base getXY function
 void getXYFromIndex(float i, int rad, int &outX, int &outY) {
 	float currentStep = 2 * PI / count;
 	outX = centerX + cos(i * currentStep) * rad;
@@ -86,9 +82,17 @@ void drawSymmetryCircle() {
 		drawPartialCircle(innerRadius, x0, y0, x1, y1);
 	}
 
-	//Attempting to draw small circle at middle of partial circle
-	// getXYFromIndex((float(maxSym) / 2.0) + 0.5, innerRadius, x0, y0);
-	// arduboy.drawCircle(x0, y0, 2, WHITE);
+	//Draw small circle in middle of partial circle
+    if(maxSym == 2 && count == 2){
+        getXYFromIndex(float(start + maxSym / 2) + 0.5, innerRadius, x0, y0);
+	    arduboy.fillCircle(x0, y0, 2, WHITE);
+    }
+    else if(maxSym > 0){
+        getXYFromIndex(float(start + maxSym / 2) - 0.5, innerRadius, x0, y0);
+	    arduboy.fillCircle(x0, y0, 2, WHITE);
+    }
+    
+
 
 }
 
@@ -144,25 +148,7 @@ int maxSymmetry(int arr[], int len, int *start, int *end) {
 	return max_sym;
 }
 
-void getXY(int i, int count, float offset, int centerX, int centerY, int radius,
-		   int &outX, int &outY) {
-	float currentStep = 2 * PI / count;
-	outX = centerX + cos((i * currentStep) + (currentStep * offset)) * radius;
-	outY = centerY + sin(i * currentStep) * radius;
-}
 
-void getXY(int i, int count, int centerX, int centerY, int radius, int &outX,
-		   int &outY) {
-	getXY(i, count, 0, centerX, centerY, radius, outX, outY);
-}
-
-void getXY(int i, int count, int &outX, int &outY) {
-	getXY(i, count, 0, centerX, centerY, radius, outX, outY);
-}
-
-void getXY(int i, int count, float offset, int &outX, int &outY) {
-	getXY(i, count, offset, centerX, centerY, radius, outX, outY);
-}
 
 int lerp(int startValue, int endValue, int currentFrame, int totalFrames) {
 	return startValue +
