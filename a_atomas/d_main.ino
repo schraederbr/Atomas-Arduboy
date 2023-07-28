@@ -132,7 +132,7 @@ void loop()
 				inMinus = false;
 			}
 			else{
-				debugMode = 1;
+				//debugMode = 1;
 			}
 		}
 		if (arduboy.justPressed(LEFT_BUTTON)){
@@ -157,7 +157,7 @@ void loop()
         }
 		arduboy.clear();
 		drawAtoms(atoms);
-        drawSymmetryStraight();
+        //drawSymmetryStraight();
 		drawSymmetryCircle();
 		drawTurn();
 		if(nextNum == -2){

@@ -4,7 +4,7 @@
 int centerX = 64;
 int centerY = 32;
 int radius = 24;
-int innerRadius = 16;
+int innerRadius = 14;
 
 // degrees * pi/180
 
@@ -59,79 +59,66 @@ void drawTurn() {
 }
 
 // This should use the base getXY function
-void getXYFromIndex(int i, int rad, int &outX, int &outY) {
+void getXYFromIndex(float i, int rad, int &outX, int &outY) {
 	float currentStep = 2 * PI / count;
 	outX = centerX + cos(i * currentStep) * rad;
 	outY = centerY + sin(i * currentStep) * rad;
 }
 
-// This needs to ignore pluses
-// Draws symmetry with straight lines
 void drawSymmetryStraight() {
 	int start, end;
 	int maxSym = maxSymmetry(atoms, count, &start, &end);
 	int x0, y0, x1, y1;
 	for (int i = 0; i < maxSym - 1; i++) {
-		getXYFromIndex((start + i) % count, innerRadius - 3, x0, y0);
-		getXYFromIndex((start + i + 1) % count, innerRadius - 3, x1, y1);
+		getXYFromIndex(float((start + i) % count), innerRadius - 3, x0, y0);
+		getXYFromIndex(float((start + i + 1) % count), innerRadius - 3, x1, y1);
 		arduboy.drawLine(x0, y0, x1, y1, WHITE);
 	}
 }
 
-// This almost works. But tends to break when circle exceeds half of atoms
-// Seems like it tends to draw the circle one direction, and not the other. 
-// For example if two atom symmetry it will draw an entire full circle sometimes
 void drawSymmetryCircle() {
 	int start, end;
 	int maxSym = maxSymmetry(atoms, count, &start, &end);
 	int x0, y0, x1, y1;
 	for (int i = 0; i < maxSym - 1; i++) {
-		getXYFromIndex((start + i) % count, innerRadius, x0, y0);
-		getXYFromIndex((start + i + 1) % count, innerRadius, x1, y1);
+		getXYFromIndex(float((start + i) % count), innerRadius, x0, y0);
+		getXYFromIndex(float((start + i + 1) % count), innerRadius, x1, y1);
 		drawPartialCircle(innerRadius, x0, y0, x1, y1);
 	}
+
+	//Attempting to draw small circle at middle of partial circle
+	// getXYFromIndex((float(maxSym) / 2.0) + 0.5, innerRadius, x0, y0);
+	// arduboy.drawCircle(x0, y0, 2, WHITE);
+
 }
 
-void swapFloat(float &a, float &b) {
-	float c = a;
-	a = b;
-	b = c;
-}
 
 void drawPartialCircle(int r, int x0, int y0, int x1, int y1) {
-	int centerX = 64, centerY = 32;
+    int centerX = 64, centerY = 32;
+    float theta0 = atan2(y0 - centerY, x0 - centerX);
+    float theta1 = atan2(y1 - centerY, x1 - centerX);
 
-	float theta0 = atan2(y0 - centerY, x0 - centerX);
-	float theta1 = atan2(y1 - centerY, x1 - centerX);
+    // normalizing angles to the range [0, 2*pi]
+    if (theta0 < 0) theta0 += 2 * M_PI;
+    if (theta1 < 0) theta1 += 2 * M_PI;
 
-	if (fabs(theta0 - theta1) < 3.14159) {
-		if (theta0 > theta1) {
-			swapFloat(theta0, theta1);
-		}
-	} else {
-		if (theta0 < theta1) {
-			swapFloat(theta0, theta1);
-		}
-	}
+    // Calculate clockwise and counter-clockwise distances
+    float distCCW = (theta1 > theta0) ? theta1 - theta0 :  2 * M_PI - theta0 + theta1;
+    float distCW = (theta1 > theta0) ? 2 * M_PI - theta1 + theta0 : theta0 - theta1;
 
-	if (theta1 < 0) {
-		theta1 += 2 * 3.14159;
-	}
+    // Choose shortest path
+    bool isCCW = (distCCW < distCW);
+    float dist = isCCW ? distCCW : distCW;
+   
+    float thetaInc = isCCW ? 0.04 : -0.04;
 
-	if (theta0 > theta1) {
-		swapFloat(theta0, theta1);
-	}
-
-	for (float theta = theta0; theta <= theta1; theta += 0.05) {
-		int x = centerX + r * cos(theta);
-		int y = centerY + r * sin(theta);
-		arduboy.drawPixel(x, y, WHITE);
-	}
+    for (float theta = theta0; (isCCW && theta <= theta0 + dist) || (!isCCW && theta >= theta0 - dist); theta += thetaInc) {
+        int x = centerX + r * cos(theta);
+        int y = centerY + r * sin(theta);
+        arduboy.drawPixel(x, y, WHITE);
+    }
 }
 
-// Need to make this ignore pluses. At least if plus is in the middle
-// There might be other cases where pluses should be considered. Like 2+11.
-// Not sure if the actual game does that
 int maxSymmetry(int arr[], int len, int *start, int *end) {
 	int max_sym = 0;
 	*start = *end = 0;
@@ -140,6 +127,8 @@ int maxSymmetry(int arr[], int len, int *start, int *end) {
 			int count = 0;
 			for (int j = 0; j < k / 2; j++) {
 				if (arr[(i + j) % len] == arr[(i + k - j - 1) % len]) {
+					if (arr[(i + j) % len] == -1 && arr[(i + k - j - 1) % len] == -1)
+						break;
 					count++;
 				} else {
 					break;
