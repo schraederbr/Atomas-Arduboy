@@ -60,6 +60,10 @@ void loseGame(){
     arduboy.print("You lasted ");
     arduboy.print(turn);
     arduboy.print(" turns");
+    arduboy.print("\n");
+    saveScore();
+    arduboy.print("High Score: ");
+    arduboy.print(EEPROM.read(512));
     arduboy.display();
     while(true){
         arduboy.pollButtons();
@@ -68,6 +72,7 @@ void loseGame(){
             return;
         }
     }
+    
 }
 
 //Might need to randomize the seed. Or that could just be the emulator.

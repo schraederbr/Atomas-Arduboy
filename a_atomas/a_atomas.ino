@@ -2,15 +2,10 @@
 // arduino-cli compile --fqbn arduboy:avr:arduboy .\a_atomas.ino --output-dir .\build\
 
 #include <Arduboy2.h>
+#include <EEPROM.h>
 Arduboy2 arduboy;
-//Broken Maybe:
-// extern int atoms[50] = {4,3,2,1,4,3,5,-1,5,4,1,2};
-// extern int count = 12;
-
+#define EEPROM_START 512
 //Should randomly start with 2-6 atoms or something like that
-//Janky circles:
-// {2,4,2,1,1};
-// {3,3,1,5,4,2,3,3}
 int prevAtoms[20];
 int atoms[20] = {1};
 int count = 1;
@@ -218,5 +213,12 @@ bool hasPlus(int atoms[], int count){
 		}
 	}
 	return false;
+}
+
+void saveScore(){
+    int highScore = EEPROM.read(EEPROM_START);
+    if(turn > highScore){
+        EEPROM.update(EEPROM_START, turn);
+    }
 }
 
