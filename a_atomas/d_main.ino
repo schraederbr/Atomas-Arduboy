@@ -41,9 +41,10 @@ void debugMode1(){
 
 void debugMode2(){
     arduboy.clear();
-    printArray(atoms);
+    int testarr[20] = {3,2,2,3};
+    printArray(testarr);
     arduboy.print("\n");
-    int score = calculateScore(atoms, count);
+    int score = calculateScore(testarr, 4, 0, 0, 0);
     arduboy.print("Score: ");
     arduboy.print(score);
     arduboy.display();

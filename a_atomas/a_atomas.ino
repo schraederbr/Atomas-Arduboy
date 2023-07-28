@@ -205,30 +205,45 @@ bool hasPlus(int atoms[], int count){
 	return false;
 }
 
-//This isn't accurate yet
-int calculateScore(int* atoms, int size) {
-    int score = 0;
-    int reactions = 0;
 
-    for(int i = 1; i < size - 1; i+= 2) {
-        int Z = atoms[i];
-        int Zo1 = atoms[i - 1];
-        int Zo2 = atoms[i + 1];
-
-        reactions++;
-        double M = 1 + 0.5 * (reactions - 1); 
-
-        if (Zo1 >= Z || Zo2 >= Z) {
-            Z += 2;
-        } else {
-            Z++;
-        }
-        
-        int Sr = floor(M * (Z + 1));
-        score += Sr; 
+//Based off: 
+//Score
+//Sr = floor(M * (Z + 1))
+//Bonus
+//B = 2 * M * (Zo - Z + 1)
+//score = Sr       if Zo < Z
+//        Sr + B   if Zo >= Z
+//Assume even number of atoms
+//Needs the recursive part and probably needs to cut the array
+int calculateScore(int arr[], int size, int reactions, int prevAtom, int tempScore){
+    if(size % 2 != 0){
+        return 0;
     }
+    if(arr[(size/2) - 1] != arr[size/2]){
+        return 0;
+    }
+    //Multiplier
+    reactions++;
+    float m = 1f + (0.5 * float(reactions))
+    int middleAtom = arr[size/2];
+    int score = floor(1.5 * float(middleAtom + 1));
+    int bonus = 2 * m * (middleAtom - prevAtom + 1);
+    if(prevAtom == 0){
+        bonus = 0;
+    }
+    if(middleAtom > prevAtom){
+        score += bonus;
+    }
+    if(size == 2){
+        return score;
+    }
+    else{
 
-    return score;
+    }
+    
+
+
+
 }
 
 void saveScore(){
