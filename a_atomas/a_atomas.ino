@@ -7,6 +7,10 @@ Arduboy2 arduboy;
 // extern int atoms[50] = {4,3,2,1,4,3,5,-1,5,4,1,2};
 // extern int count = 12;
 
+//Should randomly start with 2-6 atoms or something like that
+//Janky circles:
+// {2,4,2,1,1};
+// {3,3,1,5,4,2,3,3}
 int prevAtoms[20];
 int atoms[20] = {1};
 int count = 1;
@@ -196,7 +200,7 @@ void deleteAtIndex(int atoms[], int index) {
 void evaluatePlus(int atoms[]){
 	//This is really janky, but it might work perfectly. It runs through the atoms a bunch of time. 
 	//May need to adjust the count multiplier
-	for(int i = 0; i < count * 4; i++){
+	for(int i = 0; i < count * 10; i++){
 		if(atoms[i % count] == -1){
 			add(atoms, i % count);
 		}
