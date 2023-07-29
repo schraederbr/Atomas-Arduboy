@@ -41,10 +41,11 @@ void debugMode1(){
 
 void debugMode2(){
     arduboy.clear();
-    int testarr[20] = {3,2,2,3};
-    printArray(testarr);
+    int testarr[20] = {2,1,2,3,1,1,3,2,1,2};
+    printArray(testarr, 10);
     arduboy.print("\n");
-    int score = calculateScore(testarr, 4, 0, 0, 0);
+	int finalAtom = 0;
+    int score = calculateScore(testarr, 10, 0, finalAtom);
     arduboy.print("Score: ");
     arduboy.print(score);
     arduboy.display();
@@ -98,6 +99,7 @@ void fullReset(){
     plusEnabled = true;
     sincePlus = 0;
     turn = 0;
+	currentScore = 0;
     baseNum = 1;
     range = 4;
     nextNum = 1;
@@ -151,7 +153,7 @@ void loop()
 				inMinus = false;
 			}
 			else{
-				debugMode = 2;
+				//debugMode = 2;
 			}
 		}
 		if (arduboy.justPressed(LEFT_BUTTON)){
@@ -179,6 +181,7 @@ void loop()
         //drawSymmetryStraight();
 		drawSymmetryCircle();
 		drawTurn();
+		//drawScore();
 		if(nextNum == -2){
 			drawLine(0);
 		}

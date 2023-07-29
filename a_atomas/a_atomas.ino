@@ -6,15 +6,16 @@
 Arduboy2 arduboy;
 //This is just after the EEPROM claimed by the LATE multi game.
 #define EEPROM_START 848
-
+#define MAX_ARRAY_SIZE 20
 //Should randomly start with 2-6 atoms or something like that
-int prevAtoms[20];
-int atoms[20] = {3,5,5,3};
-int count = 4;
+int prevAtoms[MAX_ARRAY_SIZE];
+int atoms[MAX_ARRAY_SIZE] = {1};
+int count = 1;
 int oldCount = 0;
 bool plusEnabled = true;
 int sincePlus = 0;
 int turn = 0;
+int currentScore = 0;
 int baseNum = 1;
 int range = 4;
 int nextNum = 1;
@@ -105,6 +106,104 @@ void deepCopyArray(int* source, int* dest, int size) {
   }
 }
 
+//Essentially finding a palindrome
+bool getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
+	//Middle needs to be a plus
+	if(arr[i] != -1){
+		return false;
+	}
+	if(len < 3){
+		return false;
+	}
+	start = i - 1 < 0 ? len -1 : i - 1; // use length-1 (last item), if next start position is out of bounds
+	end = i + 1 >= len ? 0 : i + 1; // use 0 (first item), if next end position is out of bounds
+	if(arr[start] != arr[end]){
+		return false;
+	}
+	int counter=0; // added a counter here
+	while(arr[(start + len - 1) % len] == arr[(end + 1) % len]){
+		if(counter==len) break; // if counter equals length of array, break the loop
+		start = (start + len - 1) % len; // use mod to circle back to end if out of bounds
+		end = (end + 1) % len; // use mod to circle back to start if out of bounds
+		counter++;
+	}
+	return true;
+}
+
+void deleteSubArrayCircular(int arr[], int& size, int start, int end) {
+    if (start < 0 || end >= size || size <= 0) {
+        return;
+    }
+
+    if (start <= end) {
+        int deleteCount = end - start + 1;
+        for(int i = start; i < size - deleteCount; ++i) {
+            arr[i] = arr[i + deleteCount];
+        }
+        size -= deleteCount;
+    } else {
+        int deleteCount1 = size - start;
+        int deleteCount2 = end + 1;
+
+        // Shift Elements
+        for (int i = 0; i < deleteCount2; ++i) {
+            arr[i] = arr[i + (deleteCount1 + deleteCount2)];
+        }
+        for (int i = deleteCount2; i < size - (deleteCount1 + deleteCount2); ++i) {
+            arr[i] = arr[i + deleteCount1];
+        }
+        size -= (deleteCount1 + deleteCount2);
+    }
+}
+
+void subsetArrayCircular(int arr[], int size, int start, int end, int outArr[], int& outSize) {
+    int idx = 0; 
+    if (start > end) {
+        // Starting from start position, loop through array to the first element
+        for (int i = start; i < size; i++) {
+            outArr[idx] = arr[i];
+            idx++;
+        }
+        // Continue from the last element back to end position
+        for (int i = 0; i <= end; i++) {
+            outArr[idx] = arr[i];
+            idx++;
+        }
+    }
+    // Handle the case when start argument is less than or equal to end argument
+    else {
+        // Loop through the array from start position to end position
+        for (int i = start; i <= end; i++) {
+            outArr[idx] = arr[i];
+            idx++;
+        }
+    }
+    outSize = idx;
+}
+
+// void add(int atoms[], int i){
+// 	arduboy.clear();
+// 	int s, e;
+// 	bool hasSymmetry = getPlusSymmetry(atoms, count, i, s, e);
+// 	if(hasSymmetry == false){
+// 		return;
+// 	}
+// 	int middleAtom = 0;
+// 	int subAtoms[20];
+// 	int subAtomsSize = 0;
+// 	subsetArrayCircular(atoms, count, s, e, subAtoms, subAtomsSize);
+// 	int addedScore = calculateScore(subAtoms, subAtomsSize, 0, middleAtom);
+// 	currentScore += addedScore;
+// 	printArray(subAtoms, subAtomsSize);
+
+// 	deleteSubArrayCircular(atoms, count, e, s);
+// 	printArray(atoms,count);
+// 	arduboy.display();
+// 	while(true){
+
+// 	}
+// }
+
 //This might not work when combining into a single atom
 void add(int atoms[], int i){
     if(count < 3){
@@ -130,7 +229,6 @@ void add(int atoms[], int i){
 				atoms[i % count]++;
 			}
 		}
-		//This probably isn't perfect deleting is weird. Sometimes have to do i - 1 sometimes i - 2
 		atoms[leftIndex] = 0;
 		atoms[(i + 1) % count] = 9;
         //preCombineAnimate();
@@ -182,12 +280,48 @@ void deleteAtIndex(int atoms[], int index) {
     count--;
 }
 
+void deleteAtIndex(int atoms[], int& c, int index) {
+    index = index % c;
+    for (int i = index; i < c - 1; ++i) {
+        atoms[i] = atoms[i + 1];
+    }
+    c--;
+}
+
+void deleteAllPluses(int arr[], int& size) {
+    int newIdx = 0;
+    for (int oldIdx = 0; oldIdx < size; ++oldIdx) {
+        if (arr[oldIdx] != -1) {
+            arr[newIdx] = arr[oldIdx];
+            ++newIdx;
+        }
+    }
+    size = newIdx;
+}
+
 void evaluatePlus(int atoms[]){
 	//This is really janky, but it might be fine. It runs through the atoms a bunch of time. 
 	//May want to adjust the count multiplier
 	for(int i = 0; i < count * 10; i++){
 		if(atoms[i % count] == -1){
+			//Attempted score calculation. But this doesn't quite work
+			// int s, e;
+			// bool hasSymmetry = getPlusSymmetry(atoms, count, i, s, e);
+			// int middleAtom = 0;
+			// int subAtoms[20];
+			// int subAtomsSize = 0;
+			// subsetArrayCircular(atoms, count, s, e, subAtoms, subAtomsSize);
+			// deleteAllPluses(subAtoms, subAtomsSize);
+			// int addedScore = calculateScore(subAtoms, subAtomsSize, 0, middleAtom);
+			// currentScore += addedScore;
+			// // arduboy.clear();
+			// // printArray(atoms,count);
+			// // printArray(subAtoms,subAtomsSize);
+			// // arduboy.display();
+			// // arduboy.delayShort(20000);
 			add(atoms, i % count);
+				
+
 		}
 	}
 }
@@ -205,51 +339,55 @@ bool hasPlus(int atoms[], int count){
 	return false;
 }
 
-
-//Based off: 
-//Score
-//Sr = floor(M * (Z + 1))
-//Bonus
-//B = 2 * M * (Zo - Z + 1)
-//score = Sr       if Zo < Z
-//        Sr + B   if Zo >= Z
-//Assume even number of atoms
-//Needs the recursive part and probably needs to cut the array
-int calculateScore(int arr[], int size, int reactions, int prevAtom, int tempScore){
-    if(size % 2 != 0){
+//The final z value is the final value of the combined atoms
+//That might be useful to simplify my add function
+//Takes in a symmetrical array
+int calculateScore(int arr[], int size, int reactions, int& z){
+	if(size % 2 != 0){
         return 0;
     }
     if(arr[(size/2) - 1] != arr[size/2]){
         return 0;
     }
-    //Multiplier
-    reactions++;
-    float m = 1f + (0.5 * float(reactions))
-    int middleAtom = arr[size/2];
-    int score = floor(1.5 * float(middleAtom + 1));
-    int bonus = 2 * m * (middleAtom - prevAtom + 1);
-    if(prevAtom == 0){
-        bonus = 0;
-    }
-    if(middleAtom > prevAtom){
-        score += bonus;
-    }
-    if(size == 2){
-        return score;
-    }
-    else{
-
-    }
-    
-
-
-
+	reactions++;
+	float m = 1 + (0.5 * float(reactions));
+	if(reactions == 1){
+		z = arr[size/2];
+		if(size == 2){
+			return floor(m * float(z + 1));
+		}
+		else{
+			for(int i = (size/2) + 1; i < size + 1; i++){
+				arr[i-2] = arr[i];
+			}
+			z = z + 1;
+			return floor(m * float(z)) + calculateScore(arr, size - 2, reactions, z);
+		}
+	}
+	else{
+		int zo = arr[size/2];
+		int subScore = floor(m * float(z + 1));
+		int bonus = 2.0 * m * float(zo - z + 1);
+		if(zo >= z){
+			subScore += bonus;
+		}
+		if(zo < z){
+			z = z + 1;
+		}
+		else{
+			z = zo + 2;
+		}
+		for(int i = (size/2) + 1; i < size + 1; i++){
+			arr[i-2] = arr[i];
+		}
+		return subScore + calculateScore(arr, size - 2, reactions, z);
+	}
 }
 
 void saveScore(){
-    int highScore = EEPROM.read(EEPROM_START);
-    if(turn > highScore){
-        EEPROM.update(EEPROM_START, turn);
-    }
+    // int highScore = EEPROM.read(EEPROM_START);
+    // if(currentScore > highScore){
+    //     EEPROM.update(EEPROM_START, currentScore);
+    // }
 }
 

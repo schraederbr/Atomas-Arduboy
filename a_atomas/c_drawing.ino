@@ -55,6 +55,11 @@ void drawTurn() {
 	arduboy.print(turn);
 }
 
+void drawScore(){
+	arduboy.setCursor(3, 3);
+	arduboy.print(currentScore);
+}
+
 void getXYFromIndex(float i, int rad, int &outX, int &outY) {
 	float currentStep = 2 * PI / count;
 	outX = centerX + cos(i * currentStep) * rad;
