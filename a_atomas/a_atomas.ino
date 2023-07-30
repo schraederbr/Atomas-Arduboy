@@ -107,18 +107,18 @@ void deepCopyArray(int* source, int* dest, int size) {
 }
 
 //Essentially finding a palindrome
-bool getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
+int getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
 	//Middle needs to be a plus
 	if(arr[i] != -1){
-		return false;
+		return 0;
 	}
 	if(len < 3){
-		return false;
+		return 0;
 	}
 	start = i - 1 < 0 ? len -1 : i - 1; // use length-1 (last item), if next start position is out of bounds
 	end = i + 1 >= len ? 0 : i + 1; // use 0 (first item), if next end position is out of bounds
 	if(arr[start] != arr[end]){
-		return false;
+		return 0;
 	}
 	int counter=0; // added a counter here
 	while(arr[(start + len - 1) % len] == arr[(end + 1) % len]){
@@ -129,7 +129,7 @@ bool getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
 		end = (end + 1) % len; // use mod to circle back to start if out of bounds
 		counter++;
 	}
-	return true;
+	return counter;
 }
 
 void deleteSubArrayCircular(int arr[], int& size, int start, int end) {
@@ -270,7 +270,8 @@ void addAtom(int i, int num)
 	}
 	atoms[i] = num;
 	if(plusEnabled){
-		evaluatePlus(atoms);
+		addThings();
+		//evaluatePlus(atoms);
 	}
 }
 
@@ -344,15 +345,50 @@ bool hasPlus(int atoms[], int count){
 //The final z value is the final value of the combined atoms
 //That might be useful to simplify my add function
 //Takes in a symmetrical array
-int addThings(int arr[], int size){
-	//Find the first plus
-	int i = 0;
-	for(; i < size; i++){
-		if(arr[i] == -1){
-			break;
+void addThings(){
+	while(hasPlus(atoms)){
+		int i = 0;
+		for(; i < count; i++){
+			if(atoms[i] == -1){
+				break;
+			}
+		}
+		if(atoms[i] == -1){
+			int start, end;
+			int width = getPlusSymmetry(atoms, count, i, start, end);
+			int subset[20];
+			int subsetSize;
+			subsetArrayCircular(atoms, count, start, end, subset, subsetSize);
+			int outAtom;
+			deleteAtIndex(subset, subsetSize, subsetSize/2);
+			int subScore = calculateScore(subset, subsetSize, 0, outAtom);
+			currentScore += subScore;
+			int tempArray[20];
+			int newSize = deleteFromCircularArrayAndInsert(atoms, count, i, width, tempArray, outAtom);
+			deepCopyArray(tempArray, atoms, newSize);
+			count = newSize;
 		}
 	}
+}
 
+//This doesn't seem to work actually
+//Just inserts the num but doesn't do anything else correctly
+int deleteFromCircularArrayAndInsert(int* array, int arrayLength, int index, int width, int* outputArray, int num) {
+    int outputArrayIndex = 0;
+
+    for (int i = 0; i < arrayLength; ++i) {
+        // If the current index is outside the range to delete, copy it to the output array
+        if (!(i >= index && i < (index + width) % arrayLength)) {
+            outputArray[outputArrayIndex++] = array[i];
+        }
+
+        // Insert new number at the index position
+        if (i == ((index + width - 1) % arrayLength)) {
+            outputArray[outputArrayIndex++] = num;
+        }
+    }
+
+    return outputArrayIndex; 
 }
 
 int calculateScore(int arr[], int size, int reactions, int& z){
@@ -362,6 +398,9 @@ int calculateScore(int arr[], int size, int reactions, int& z){
     if(arr[(size/2) - 1] != arr[size/2]){
         return 0;
     }
+	if(size < 2){
+		return 0;
+	}
 	reactions++;
 	float m = 1 + (0.5 * float(reactions));
 	if(reactions == 1){
