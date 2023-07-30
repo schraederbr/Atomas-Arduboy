@@ -122,6 +122,8 @@ bool getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
 	}
 	int counter=0; // added a counter here
 	while(arr[(start + len - 1) % len] == arr[(end + 1) % len]){
+		//Break if plus is found
+		if(arr[(start + len - 1) % len] == -1 || arr[(end + 1) % len] == -1) break;
 		if(counter==len) break; // if counter equals length of array, break the loop
 		start = (start + len - 1) % len; // use mod to circle back to end if out of bounds
 		end = (end + 1) % len; // use mod to circle back to start if out of bounds
@@ -342,6 +344,17 @@ bool hasPlus(int atoms[], int count){
 //The final z value is the final value of the combined atoms
 //That might be useful to simplify my add function
 //Takes in a symmetrical array
+int addThings(int arr[], int size){
+	//Find the first plus
+	int i = 0;
+	for(; i < size; i++){
+		if(arr[i] == -1){
+			break;
+		}
+	}
+
+}
+
 int calculateScore(int arr[], int size, int reactions, int& z){
 	if(size % 2 != 0){
         return 0;
