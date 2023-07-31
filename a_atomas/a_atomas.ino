@@ -9,8 +9,10 @@ Arduboy2 arduboy;
 #define MAX_ARRAY_SIZE 20
 //Should randomly start with 2-6 atoms or something like that
 int prevAtoms[MAX_ARRAY_SIZE];
-int atoms[MAX_ARRAY_SIZE] = {1};
-int count = 1;
+int atoms[MAX_ARRAY_SIZE] = {4,2,2,2,2,4,2,-1,2};;
+int scoreAtoms[MAX_ARRAY_SIZE];
+int scoreAtomsCount = 0;
+int count = 9;
 int oldCount = 0;
 bool plusEnabled = true;
 int sincePlus = 0;
@@ -18,7 +20,7 @@ int turn = 0;
 int currentScore = 0;
 int baseNum = 1;
 int range = 4;
-int nextNum = 1;
+int nextNum = -1;
 int index = 0;
 int frames = 0;
 int totalFrames = 60;
@@ -106,82 +108,81 @@ void deepCopyArray(int* source, int* dest, int size) {
   }
 }
 
-//Essentially finding a palindrome
+//This is currently broken
+//int getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
+//     if(arr[i] != -1 || len < 3){
+//         return 0;
+//     }
+//     start = i - 1 < 0 ? len -1 : i - 1; // use length-1 (last item), if next start position is out of bounds
+//     end = i + 1 >= len ? 0 : i + 1; // use 0 (first item), if next end position is out of bounds
+
+//     if(arr[start] != arr[end]){
+//         return 0;
+//     }
+//     int counter = 0;
+//     while(arr[(start + len - 1) % len] == arr[(end + 1) % len] && counter < len){
+//         start = (start + len - 1) % len; // use mod to circle back to end if out of bounds
+//         end = (end + 1) % len; // use mod to circle back to start if out of bounds
+//         counter++;
+//     }
+//     return counter;
+// }
+
+//Rewrite this make it recursive or just do it yourself, don't trust GPT-4
 int getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
-	//Middle needs to be a plus
-	if(arr[i] != -1){
-		return 0;
-	}
-	if(len < 3){
-		return 0;
-	}
-	start = i - 1 < 0 ? len -1 : i - 1; // use length-1 (last item), if next start position is out of bounds
-	end = i + 1 >= len ? 0 : i + 1; // use 0 (first item), if next end position is out of bounds
-	if(arr[start] != arr[end]){
-		return 0;
-	}
-	int counter=0; // added a counter here
-	while(arr[(start + len - 1) % len] == arr[(end + 1) % len]){
-		//Break if plus is found
-		if(arr[(start + len - 1) % len] == -1 || arr[(end + 1) % len] == -1) break;
-		if(counter==len) break; // if counter equals length of array, break the loop
-		start = (start + len - 1) % len; // use mod to circle back to end if out of bounds
-		end = (end + 1) % len; // use mod to circle back to start if out of bounds
-		counter++;
-	}
-	return counter;
+	
 }
 
-void deleteSubArrayCircular(int arr[], int& size, int start, int end) {
-    if (start < 0 || end >= size || size <= 0) {
-        return;
-    }
+// void deleteSubArrayCircular(int arr[], int& size, int start, int end) {
+//     if (start < 0 || end >= size || size <= 0) {
+//         return;
+//     }
 
-    if (start <= end) {
-        int deleteCount = end - start + 1;
-        for(int i = start; i < size - deleteCount; ++i) {
-            arr[i] = arr[i + deleteCount];
-        }
-        size -= deleteCount;
-    } else {
-        int deleteCount1 = size - start;
-        int deleteCount2 = end + 1;
+//     if (start <= end) {
+//         int deleteCount = end - start + 1;
+//         for(int i = start; i < size - deleteCount; ++i) {
+//             arr[i] = arr[i + deleteCount];
+//         }
+//         size -= deleteCount;
+//     } else {
+//         int deleteCount1 = size - start;
+//         int deleteCount2 = end + 1;
 
-        // Shift Elements
-        for (int i = 0; i < deleteCount2; ++i) {
-            arr[i] = arr[i + (deleteCount1 + deleteCount2)];
-        }
-        for (int i = deleteCount2; i < size - (deleteCount1 + deleteCount2); ++i) {
-            arr[i] = arr[i + deleteCount1];
-        }
-        size -= (deleteCount1 + deleteCount2);
-    }
-}
+//         // Shift Elements
+//         for (int i = 0; i < deleteCount2; ++i) {
+//             arr[i] = arr[i + (deleteCount1 + deleteCount2)];
+//         }
+//         for (int i = deleteCount2; i < size - (deleteCount1 + deleteCount2); ++i) {
+//             arr[i] = arr[i + deleteCount1];
+//         }
+//         size -= (deleteCount1 + deleteCount2);
+//     }
+// }
 
-void subsetArrayCircular(int arr[], int size, int start, int end, int outArr[], int& outSize) {
-    int idx = 0; 
-    if (start > end) {
-        // Starting from start position, loop through array to the first element
-        for (int i = start; i < size; i++) {
-            outArr[idx] = arr[i];
-            idx++;
-        }
-        // Continue from the last element back to end position
-        for (int i = 0; i <= end; i++) {
-            outArr[idx] = arr[i];
-            idx++;
-        }
-    }
-    // Handle the case when start argument is less than or equal to end argument
-    else {
-        // Loop through the array from start position to end position
-        for (int i = start; i <= end; i++) {
-            outArr[idx] = arr[i];
-            idx++;
-        }
-    }
-    outSize = idx;
-}
+// void subsetArrayCircular(int arr[], int size, int start, int end, int outArr[], int& outSize) {
+//     int idx = 0; 
+//     if (start > end) {
+//         // Starting from start position, loop through array to the first element
+//         for (int i = start; i < size; i++) {
+//             outArr[idx] = arr[i];
+//             idx++;
+//         }
+//         // Continue from the last element back to end position
+//         for (int i = 0; i <= end; i++) {
+//             outArr[idx] = arr[i];
+//             idx++;
+//         }
+//     }
+//     // Handle the case when start argument is less than or equal to end argument
+//     else {
+//         // Loop through the array from start position to end position
+//         for (int i = start; i <= end; i++) {
+//             outArr[idx] = arr[i];
+//             idx++;
+//         }
+//     }
+//     outSize = idx;
+// }
 
 // void add(int atoms[], int i){
 // 	arduboy.clear();
@@ -207,68 +208,69 @@ void subsetArrayCircular(int arr[], int size, int start, int end, int outArr[], 
 // }
 
 //This might not work when combining into a single atom
-void add(int atoms[], int i){
-    if(count < 3){
-        return;
-    }
-	int leftIndex = (i - 1) % count;
-	if(i - 1 < 0 ){
-		leftIndex = i - 1 + count;
-	}
+// void add(int atoms[], int i){
+//     if(count < 3){
+//         return;
+//     }
+// 	int leftIndex = (i - 1) % count;
+// 	if(i - 1 < 0 ){
+// 		leftIndex = i - 1 + count;
+// 	}
 	
-	int left = atoms[leftIndex];
-	int right = atoms[((i + 1) % count)];
+// 	int left = atoms[leftIndex];
+// 	int right = atoms[((i + 1) % count)];
 
-	if(left == right && (left != -1 || right != -1)){
-		if(atoms[i % count] == -1){
-			atoms[i % count] = left + 1;
-		}
-		else{
-			if(left > atoms[i % count]){
-				atoms[i % count] = left + 2;
-			}
-			else{
-				atoms[i % count]++;
-			}
-		}
-		atoms[leftIndex] = 0;
-		atoms[(i + 1) % count] = 9;
-        //preCombineAnimate();
-		if(i == 0){
-			deleteAtIndex(atoms, 1);
-			deleteAtIndex(atoms, count - 1);
-			if(count > 2){
-				printArray(atoms);
-				add(atoms, 0);
-			}
-		}
-		else{
-			deleteAtIndex(atoms, (i + 1) % count);
-			if(i == count){
-				deleteAtIndex(atoms, (i - 2) % count);
-			}
-			else{
-				deleteAtIndex(atoms, (i - 1) % count);
-			}
-			//This if might not quite be right
-			if(count > 2){
-				printArray(atoms);
-				add(atoms, ((i - 1) % count));
-			}
-		}
-	}
-}
+// 	if(left == right && (left != -1 || right != -1)){
+// 		if(atoms[i % count] == -1){
+// 			atoms[i % count] = left + 1;
+// 		}
+// 		else{
+// 			if(left > atoms[i % count]){
+// 				atoms[i % count] = left + 2;
+// 			}
+// 			else{
+// 				atoms[i % count]++;
+// 			}
+// 		}
+// 		atoms[leftIndex] = 0;
+// 		atoms[(i + 1) % count] = 9;
+//         //preCombineAnimate();
+// 		if(i == 0){
+// 			deleteAtIndex(atoms, 1);
+// 			deleteAtIndex(atoms, count - 1);
+// 			if(count > 2){
+// 				printArray(atoms);
+// 				add(atoms, 0);
+// 			}
+// 		}
+// 		else{
+// 			deleteAtIndex(atoms, (i + 1) % count);
+// 			if(i == count){
+// 				deleteAtIndex(atoms, (i - 2) % count);
+// 			}
+// 			else{
+// 				deleteAtIndex(atoms, (i - 1) % count);
+// 			}
+// 			//This if might not quite be right
+// 			if(count > 2){
+// 				printArray(atoms);
+// 				add(atoms, ((i - 1) % count));
+// 			}
+// 		}
+// 	}
+// }
 
+//does this have a problem?
 void addAtom(int i, int num)
 {
 	turn++;
 	i = i % count;
-	count++;
-	for (int j = count - 1; j > i; j--)
-	{
-		atoms[j] = atoms[j - 1];
-	}
-	atoms[i] = num;
+	addAtIndex(i, num);
+	// for (int j = count - 1; j > i; j--)
+	// {
+	// 	atoms[j] = atoms[j - 1];
+	// }
+	// atoms[i] = num;
 	if(plusEnabled){
 		addThings();
 		//evaluatePlus(atoms);
@@ -291,43 +293,43 @@ void deleteAtIndex(int atoms[], int& c, int index) {
     c--;
 }
 
-void deleteAllPluses(int arr[], int& size) {
-    int newIdx = 0;
-    for (int oldIdx = 0; oldIdx < size; ++oldIdx) {
-        if (arr[oldIdx] != -1) {
-            arr[newIdx] = arr[oldIdx];
-            ++newIdx;
-        }
-    }
-    size = newIdx;
-}
+// void deleteAllPluses(int arr[], int& size) {
+//     int newIdx = 0;
+//     for (int oldIdx = 0; oldIdx < size; ++oldIdx) {
+//         if (arr[oldIdx] != -1) {
+//             arr[newIdx] = arr[oldIdx];
+//             ++newIdx;
+//         }
+//     }
+//     size = newIdx;
+// }
 
-void evaluatePlus(int atoms[]){
-	//This is really janky, but it might be fine. It runs through the atoms a bunch of time. 
-	//May want to adjust the count multiplier
-	for(int i = 0; i < count * 10; i++){
-		if(atoms[i % count] == -1){
-			//Attempted score calculation. But this doesn't quite work
-			// int s, e;
-			// bool hasSymmetry = getPlusSymmetry(atoms, count, i, s, e);
-			// int middleAtom = 0;
-			// int subAtoms[20];
-			// int subAtomsSize = 0;
-			// subsetArrayCircular(atoms, count, s, e, subAtoms, subAtomsSize);
-			// deleteAllPluses(subAtoms, subAtomsSize);
-			// int addedScore = calculateScore(subAtoms, subAtomsSize, 0, middleAtom);
-			// currentScore += addedScore;
-			// // arduboy.clear();
-			// // printArray(atoms,count);
-			// // printArray(subAtoms,subAtomsSize);
-			// // arduboy.display();
-			// // arduboy.delayShort(20000);
-			add(atoms, i % count);
+// void evaluatePlus(int atoms[]){
+// 	//This is really janky, but it might be fine. It runs through the atoms a bunch of time. 
+// 	//May want to adjust the count multiplier
+// 	for(int i = 0; i < count * 10; i++){
+// 		if(atoms[i % count] == -1){
+// 			//Attempted score calculation. But this doesn't quite work
+// 			// int s, e;
+// 			// bool hasSymmetry = getPlusSymmetry(atoms, count, i, s, e);
+// 			// int middleAtom = 0;
+// 			// int subAtoms[20];
+// 			// int subAtomsSize = 0;
+// 			// subsetArrayCircular(atoms, count, s, e, subAtoms, subAtomsSize);
+// 			// deleteAllPluses(subAtoms, subAtomsSize);
+// 			// int addedScore = calculateScore(subAtoms, subAtomsSize, 0, middleAtom);
+// 			// currentScore += addedScore;
+// 			// // arduboy.clear();
+// 			// // printArray(atoms,count);
+// 			// // printArray(subAtoms,subAtomsSize);
+// 			// // arduboy.display();
+// 			// // arduboy.delayShort(20000);
+// 			add(atoms, i % count);
 				
 
-		}
-	}
-}
+// 		}
+// 	}
+// }
 
 bool hasPlus(int atoms[]){
 	return hasPlus(atoms, count);
@@ -342,10 +344,20 @@ bool hasPlus(int atoms[], int count){
 	return false;
 }
 
+int calculateCircularDistance(int start, int end, int length) {
+  if(start == end) 
+    return 0;
+  else if (start < end) 
+    return (end - start == 1) ? length + 1 : (end - start) + 1;
+  else
+    return (start - end == 1) ? length + 1 : (length - start + end) + 1;
+}
 //The final z value is the final value of the combined atoms
 //That might be useful to simplify my add function
 //Takes in a symmetrical array
 void addThings(){
+	arduboy.clear();
+	printArray(atoms);
 	while(hasPlus(atoms)){
 		int i = 0;
 		for(; i < count; i++){
@@ -355,40 +367,64 @@ void addThings(){
 		}
 		if(atoms[i] == -1){
 			int start, end;
-			int width = getPlusSymmetry(atoms, count, i, start, end);
-			int subset[20];
-			int subsetSize;
-			subsetArrayCircular(atoms, count, start, end, subset, subsetSize);
+			//This width probably isn't correct
+			int width;
+			getPlusSymmetry(atoms, count, i, start, end);
+            width = calculateCircularDistance(start, end, count);
+			int endMiddle = deleteSymmetry(i, width);
 			int outAtom;
-			deleteAtIndex(subset, subsetSize, subsetSize/2);
-			int subScore = calculateScore(subset, subsetSize, 0, outAtom);
+			int subScore = calculateScore(scoreAtoms, scoreAtomsCount, 0, outAtom);
 			currentScore += subScore;
-			int tempArray[20];
-			int newSize = deleteFromCircularArrayAndInsert(atoms, count, i, width, tempArray, outAtom);
-			deepCopyArray(tempArray, atoms, newSize);
-			count = newSize;
+			
+			
+			addAtIndex(endMiddle, outAtom);
 		}
 	}
+	printArray(atoms);
+	arduboy.display();
+	arduboy.delayShort(3000);
 }
 
-//This doesn't seem to work actually
-//Just inserts the num but doesn't do anything else correctly
-int deleteFromCircularArrayAndInsert(int* array, int arrayLength, int index, int width, int* outputArray, int num) {
-    int outputArrayIndex = 0;
+int deleteSymmetry(int center, int width){
+    //printArray(atoms);
+    //addAtIndex(0, atoms[center]);
+	deleteAtIndex(atoms, count, center);
+	//printArray(atoms);
+	scoreAtomsCount = 0;
+	for(int i = 0; i < width/2; i++){
+	    center--;
+	    addScoreAtoms(0, atoms[center]);
+        deleteAtIndex(atoms, count, center);
+        //printArray(atoms);
+        addScoreAtoms(scoreAtomsCount, atoms[center]);
+        deleteAtIndex(atoms, count, center);
+        //printArray(atoms);
+	}
+	return center;
+}
 
-    for (int i = 0; i < arrayLength; ++i) {
-        // If the current index is outside the range to delete, copy it to the output array
-        if (!(i >= index && i < (index + width) % arrayLength)) {
-            outputArray[outputArrayIndex++] = array[i];
+void addAtIndex(int index, int value) {
+    if(index <  MAX_ARRAY_SIZE && index >= 0) {
+        // shift elements to the right of the index to make space
+        for (int i =  MAX_ARRAY_SIZE-1; i > index; i--) {
+            atoms[i] = atoms[i - 1];
         }
-
-        // Insert new number at the index position
-        if (i == ((index + width - 1) % arrayLength)) {
-            outputArray[outputArrayIndex++] = num;
-        }
+        // insert new value
+        atoms[index] = value;
+        count++;
     }
+}
 
-    return outputArrayIndex; 
+void addScoreAtoms(int index, int value){
+    if(index <  MAX_ARRAY_SIZE && index >= 0) {
+        // shift elements to the right of the index to make space
+        for (int i =  MAX_ARRAY_SIZE-1; i > index; i--) {
+            scoreAtoms[i] = scoreAtoms[i - 1];
+        }
+        // insert new value
+        scoreAtoms[index] = value;
+        scoreAtomsCount++;
+    }
 }
 
 int calculateScore(int arr[], int size, int reactions, int& z){
@@ -398,15 +434,16 @@ int calculateScore(int arr[], int size, int reactions, int& z){
     if(arr[(size/2) - 1] != arr[size/2]){
         return 0;
     }
-	if(size < 2){
-		return 0;
-	}
+    if(size < 2){
+        return 0;
+    }
 	reactions++;
 	float m = 1 + (0.5 * float(reactions));
 	if(reactions == 1){
 		z = arr[size/2];
 		if(size == 2){
-			return floor(m * float(z + 1));
+		    z++;
+			return floor(m * float(z));
 		}
 		else{
 			for(int i = (size/2) + 1; i < size + 1; i++){
@@ -419,10 +456,12 @@ int calculateScore(int arr[], int size, int reactions, int& z){
 	else{
 		int zo = arr[size/2];
 		int subScore = floor(m * float(z + 1));
+		
 		int bonus = 2.0 * m * float(zo - z + 1);
 		if(zo >= z){
 			subScore += bonus;
 		}
+		//cout << "R: " << reactions << " subScore: " << subScore << "\n";
 		if(zo < z){
 			z = z + 1;
 		}

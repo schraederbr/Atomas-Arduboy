@@ -13,10 +13,10 @@ void mainSetup()
 	// count = 6;
 	arduboy.begin();
 	arduboy.clear();
-	arduboy.setFrameRate(60);
+	arduboy.setFrameRate(0.1);
 	if (debugMode == 1){
 		printArray(atoms);
-		evaluatePlus(atoms);
+		//evaluatePlus(atoms);
 		arduboy.print("Final \n");
 		printArray(atoms);
 	}
@@ -41,13 +41,16 @@ void debugMode1(){
 
 void debugMode2(){
     arduboy.clear();
-    int testarr[20] = {2,1,2,3,1,1,3,2,1,2};
-    printArray(testarr, 10);
-    arduboy.print("\n");
-	int finalAtom = 0;
-    int score = calculateScore(testarr, 10, 0, finalAtom);
-    arduboy.print("Score: ");
-    arduboy.print(score);
+	printArray(atoms);
+	addThings();
+	printArray(atoms);
+    // int testarr[20] = {2,1,2,3,1,1,3,2,1,2};
+    // printArray(testarr, 10);
+    // arduboy.print("\n");
+	// int finalAtom = 0;
+    // int score = calculateScore(testarr, 10, 0, finalAtom);
+    // arduboy.print("Score: ");
+    // arduboy.print(score);
     arduboy.display();
     while(true){
     }
@@ -56,7 +59,7 @@ void debugMode2(){
 void setup(){
 	arduboy.begin();
 	arduboy.clear();
-	arduboy.setFrameRate(60);
+	arduboy.setFrameRate(1);
 	arduboy.initRandomSeed();
 }
 void doMinus(){
@@ -113,6 +116,7 @@ void fullReset(){
 
 void loop()
 {
+	//debugMode = 2;
 	if (!arduboy.nextFrame()) return;
 	arduboy.pollButtons();
 	if(arduboy.justPressed(DOWN_BUTTON)){
@@ -153,7 +157,7 @@ void loop()
 				inMinus = false;
 			}
 			else{
-				//debugMode = 2;
+				debugMode = 2;
 			}
 		}
 		if (arduboy.justPressed(LEFT_BUTTON)){

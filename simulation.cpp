@@ -9,9 +9,28 @@ Write your code in this editor and press "Run" button to compile and execute it.
 #include <iostream>
 #include <cmath>
 using namespace std;
-int atoms[20] = {3,-1,3,2,4,1,5,2};
-int count = 8;
+#define MAX_ARRAY_SIZE 20
+int atoms[20] = {4,2,2,2,2,4,2,-1,2};
+int scoreAtoms[20];
+int scoreAtomsCount = 0;
+int count = 9;
 int currentScore = 0;
+
+void printArray(int as[], int n)
+{
+    cout << n;
+    cout << ": ";
+    for (int i = 0; i < n; i++)
+    {
+        cout << as[i];
+    }
+    cout << "\n";
+}
+
+void printArray(int as[])
+{
+   printArray(as, count);
+}
 
 void deepCopyArray(int* source, int* dest, int size) {
   for (int i = 0; i < size; i++) {
@@ -58,29 +77,24 @@ int deleteFromCircularArrayAndInsert(int* array, int arrayLength, int index, int
     return outputArrayIndex; 
 }
 
+//THis function is broken
 int getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
-	//Middle needs to be a plus
-	if(arr[i] != -1){
-		return 0;
-	}
-	if(len < 3){
-		return 0;
-	}
-	start = i - 1 < 0 ? len -1 : i - 1; // use length-1 (last item), if next start position is out of bounds
-	end = i + 1 >= len ? 0 : i + 1; // use 0 (first item), if next end position is out of bounds
-	if(arr[start] != arr[end]){
-		return 0;
-	}
-	int counter=0; // added a counter here
-	while(arr[(start + len - 1) % len] == arr[(end + 1) % len]){
-		//Break if plus is found
-		if(arr[(start + len - 1) % len] == -1 || arr[(end + 1) % len] == -1) break;
-		if(counter==len) break; // if counter equals length of array, break the loop
-		start = (start + len - 1) % len; // use mod to circle back to end if out of bounds
-		end = (end + 1) % len; // use mod to circle back to start if out of bounds
-		counter++;
-	}
-	return counter;
+    if(arr[i] != -1 || len < 3){
+        return 0;
+    }
+    start = i - 1 < 0 ? len -1 : i - 1; // use length-1 (last item), if next start position is out of bounds
+    end = i + 1 >= len ? 0 : i + 1; // use 0 (first item), if next end position is out of bounds
+
+    if(arr[start] != arr[end]){
+        return 0;
+    }
+    int counter = 0;
+    while(arr[(start + len - 1) % len] == arr[(end + 1) % len] && counter < len){
+        start = (start + len - 1) % len; // use mod to circle back to end if out of bounds
+        end = (end + 1) % len; // use mod to circle back to start if out of bounds
+        counter++;
+    }
+    return counter;
 }
 
 void subsetArrayCircular(int arr[], int size, int start, int end, int outArr[], int& outSize) {
@@ -136,10 +150,12 @@ int calculateScore(int arr[], int size, int reactions, int& z){
 	else{
 		int zo = arr[size/2];
 		int subScore = floor(m * float(z + 1));
+		
 		int bonus = 2.0 * m * float(zo - z + 1);
 		if(zo >= z){
 			subScore += bonus;
 		}
+		//cout << "R: " << reactions << " subScore: " << subScore << "\n";
 		if(zo < z){
 			z = z + 1;
 		}
@@ -153,6 +169,59 @@ int calculateScore(int arr[], int size, int reactions, int& z){
 	}
 }
 
+void addAtIndex(int index, int value) {
+    if(index <  MAX_ARRAY_SIZE && index >= 0) {
+        // shift elements to the right of the index to make space
+        for (int i =  MAX_ARRAY_SIZE-1; i > index; i--) {
+            atoms[i] = atoms[i - 1];
+        }
+        // insert new value
+        atoms[index] = value;
+        count++;
+    }
+}
+
+void addScoreAtoms(int index, int value){
+    if(index <  MAX_ARRAY_SIZE && index >= 0) {
+        // shift elements to the right of the index to make space
+        for (int i =  MAX_ARRAY_SIZE-1; i > index; i--) {
+            scoreAtoms[i] = scoreAtoms[i - 1];
+        }
+        // insert new value
+        scoreAtoms[index] = value;
+        scoreAtomsCount++;
+    }
+}
+
+
+int deleteSymmetry(int center, int width){
+    //printArray(atoms);
+    //addAtIndex(0, atoms[center]);
+	deleteAtIndex(atoms, count, center);
+	//printArray(atoms);
+	scoreAtomsCount = 0;
+	cout << "Width: " << width << "\n";
+	for(int i = 0; i < width/2; i++){
+	    center--;
+	    addScoreAtoms(0, atoms[center]);
+        deleteAtIndex(atoms, count, center);
+        //printArray(atoms);
+        addScoreAtoms(scoreAtomsCount, atoms[center]);
+        deleteAtIndex(atoms, count, center);
+        //printArray(atoms);
+	}
+	return center;
+}
+
+int calculateCircularDistance(int start, int end, int length) {
+  if(start == end) 
+    return 0;
+  else if (start < end) 
+    return (end - start == 1) ? length + 1 : (end - start) + 1;
+  else
+    return (start - end == 1) ? length + 1 : (length - start + end) + 1;
+}
+
 void addThings(){
 	while(hasPlus(atoms)){
 		int i = 0;
@@ -163,38 +232,22 @@ void addThings(){
 		}
 		if(atoms[i] == -1){
 			int start, end;
-			int width = getPlusSymmetry(atoms, count, i, start, end);
-			int subset[20];
-			int subsetSize;
-			subsetArrayCircular(atoms, count, start, end, subset, subsetSize);
+			//This width probably isn't correct
+			int width;
+			getPlusSymmetry(atoms, count, i, start, end);
+            width = calculateCircularDistance(start, end, count);
+			int endMiddle = deleteSymmetry(i, width);
 			int outAtom;
-			deleteAtIndex(subset, subsetSize, subsetSize/2);
-			int subScore = calculateScore(subset, subsetSize, 0, outAtom);
+			int subScore = calculateScore(scoreAtoms, scoreAtomsCount, 0, outAtom);
+			cout << "outAtom: " << outAtom << "\n";
 			currentScore += subScore;
-			int tempArray[20];
-			int newSize = deleteFromCircularArrayAndInsert(atoms, count, i, width, tempArray, outAtom);
-			deepCopyArray(tempArray, atoms, newSize);
-			count = newSize;
+			
+			
+			addAtIndex(endMiddle, outAtom);
 		}
 	}
 }
 
-
-void printArray(int as[], int n)
-{
-    cout << n;
-    cout << ": ";
-    for (int i = 0; i < n; i++)
-    {
-        cout << as[i];
-    }
-    cout << "\n";
-}
-
-void printArray(int as[])
-{
-   printArray(as, count);
-}
 
 
 
@@ -204,12 +257,22 @@ void printArray(int as[])
 
 int main()
 {
-    int testArr[20] = {2,1,1,2};
-    int out;
-    int s = calculateScore(testArr, 4, 0, out);
-    cout << s << "\n";
+
+    //int width = calculateCircularDistance(1, 6, 10);
+    //cout << width;
+    // int middle = deleteSymmetry(5, 6);
+    // addAtIndex(middle, 8);
+    // printArray(scoreAtoms, scoreAtomsCount);
     printArray(atoms);
     addThings();
     printArray(atoms);
-    cout << 5/2;
+    // // cout << "currentScore: " << currentScore << "\n";
+    // int testarr[20] = {2,1,2,3,1,1,3,2,1,2};
+    // int out;
+    // int s = calculateScore(testarr, 10, 0, out);
+    // cout << s << "\n";
+    // cout << "Out atom: " << out << "\n";
+    // printArray(atoms);
+    // addThings();
+    // printArray(atoms);
 }
