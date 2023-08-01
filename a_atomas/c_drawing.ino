@@ -55,11 +55,6 @@ void drawTurn() {
 	arduboy.print(turn);
 }
 
-void drawScore(){
-	arduboy.setCursor(3, 3);
-	arduboy.print(currentScore);
-}
-
 void getXYFromIndex(float i, int rad, int &outX, int &outY) {
 	float currentStep = 2 * PI / count;
 	outX = centerX + cos(i * currentStep) * rad;
@@ -96,6 +91,9 @@ void drawSymmetryCircle() {
         getXYFromIndex(float(start + maxSym / 2) - 0.5, innerRadius, x0, y0);
 	    arduboy.fillCircle(x0, y0, 2, WHITE);
     }
+    
+
+
 }
 
 
@@ -149,6 +147,7 @@ int maxSymmetry(int arr[], int len, int *start, int *end) {
 	}
 	return max_sym;
 }
+
 
 
 int lerp(int startValue, int endValue, int currentFrame, int totalFrames) {
