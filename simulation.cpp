@@ -10,10 +10,12 @@ Write your code in this editor and press "Run" button to compile and execute it.
 #include <cmath>
 using namespace std;
 #define MAX_ARRAY_SIZE 20
-int atoms[20] = {4,2,2,2,2,4,2,-1,2};
+int atoms[20] = {4,2,3,2,4,2,-1,2};
+int atomsD[20];
+int countD = 0;
 int scoreAtoms[20];
 int scoreAtomsCount = 0;
-int count = 9;
+int count = 8;
 int currentScore = 0;
 
 void printArray(int as[], int n)
@@ -39,6 +41,9 @@ void deepCopyArray(int* source, int* dest, int size) {
 }
 
 void deleteAtIndex(int atoms[], int& c, int index) {
+    if(c == 0){
+        return;
+    }
     index = index % c;
     for (int i = index; i < c - 1; ++i) {
         atoms[i] = atoms[i + 1];
@@ -77,24 +82,112 @@ int deleteFromCircularArrayAndInsert(int* array, int arrayLength, int index, int
     return outputArrayIndex; 
 }
 
+// int findSymmetry(int index){
+//   if (atoms[index] != -1) return 0;
+
+//   int symmetry_length = 0;
+//   int left_index = index - 1;
+//   int right_index = index + 1;
+
+//   while(symmetry_length < count) { // limit loop by count to avoid infinite loop.
+//     if(left_index < 0) left_index = count - 1; // wrap around to the end
+//     if(right_index == count) right_index = 0; // wrap around to the start
+
+//     if(atoms[left_index] != atoms[right_index])
+//       break;
+
+//     symmetry_length++; // Increase the symmetric length
+//     --left_index;
+//     ++right_index;
+//   }
+
+//   return symmetry_length * 2; // multiply by 2 because we are counting symmetric pairs
+// }
+
 //THis function is broken
 int getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
-    if(arr[i] != -1 || len < 3){
-        return 0;
-    }
-    start = i - 1 < 0 ? len -1 : i - 1; // use length-1 (last item), if next start position is out of bounds
-    end = i + 1 >= len ? 0 : i + 1; // use 0 (first item), if next end position is out of bounds
+	start = i;
+	end = i;
+	
+	int distanceFromIndex = 0;
+	//while(distanceFromIndex * 2 - 1 < len){
+	while(distanceFromIndex <= len / 2){
+	    cout << "Start: " << start << " End: " << end << " Distance: : " << distanceFromIndex << "\n";
+		if(atoms[i] != -1){
+		    cout << "One" << "\n";
+			return distanceFromIndex * 2;
+		}
+		if(len < 3){
+		    cout << "Two" << "\n";
+			return distanceFromIndex * 2;
+		}
+		int left, right;
+        if(i - distanceFromIndex >= 0){
+        	left = i - distanceFromIndex;
+        }
+        else{
+        	left = (i - distanceFromIndex + len) % len;
+        }
+        if(i + distanceFromIndex < len){
+		    right = i + distanceFromIndex;
+	    }
+	    else{
+		    right = (i + distanceFromIndex) % len; 
+	    }
+		if(atoms[left] == atoms[right]){
+			start = left;
+			end = right;
+			distanceFromIndex++;
+		}
+		else{
+		    cout << "Three" << "\n";
+			return distanceFromIndex * 2;
+		}
+	}
+	cout << "Four" << "\n";
+	return (distanceFromIndex) * 2 ;
+}
 
-    if(arr[start] != arr[end]){
-        return 0;
+int sym(int i){
+    deepCopyArray(atoms, atomsD, MAX_ARRAY_SIZE);
+    countD = count;
+    int left, right;
+    int width = 0;
+    while(countD >= 3){
+        i = i % countD;
+        //Make sure i is in bounds
+        if(i - 1 < 0){
+            left = countD - 1;
+        }
+        else{
+            left = i - 1;
+        }
+        if(i + 1 >= countD){
+            right = 0;
+        }
+        else{
+            right = i + 1;
+        }
+        if(left == right){
+            width += 2;
+            //Delete the two things
+            if(left > i && right < i || left < i && right > i){
+                i--;
+            }
+            if(left > i && right > i){
+                //i doesn't change?
+            }
+            if( left < i && right < i){
+                i -= 2;
+            }
+            
+        }
+        else{
+            break;
+        }
     }
-    int counter = 0;
-    while(arr[(start + len - 1) % len] == arr[(end + 1) % len] && counter < len){
-        start = (start + len - 1) % len; // use mod to circle back to end if out of bounds
-        end = (end + 1) % len; // use mod to circle back to start if out of bounds
-        counter++;
-    }
-    return counter;
+    return width;
+    
 }
 
 void subsetArrayCircular(int arr[], int size, int start, int end, int outArr[], int& outSize) {
@@ -200,7 +293,7 @@ int deleteSymmetry(int center, int width){
 	deleteAtIndex(atoms, count, center);
 	//printArray(atoms);
 	scoreAtomsCount = 0;
-	cout << "Width: " << width << "\n";
+	//cout << "Width: " << width << "\n";
 	for(int i = 0; i < width/2; i++){
 	    center--;
 	    addScoreAtoms(0, atoms[center]);
@@ -233,9 +326,10 @@ void addThings(){
 		if(atoms[i] == -1){
 			int start, end;
 			//This width probably isn't correct
-			int width;
-			getPlusSymmetry(atoms, count, i, start, end);
-            width = calculateCircularDistance(start, end, count);
+			//int width = findSymmetry(i);
+			int width = getPlusSymmetry(atoms, count, i, start, end);
+			cout << "Width: " << width;
+            //width = calculateCircularDistance(start, end, count);
 			int endMiddle = deleteSymmetry(i, width);
 			int outAtom;
 			int subScore = calculateScore(scoreAtoms, scoreAtomsCount, 0, outAtom);
@@ -243,7 +337,12 @@ void addThings(){
 			currentScore += subScore;
 			
 			
-			addAtIndex(endMiddle, outAtom);
+			if(count == 0){
+				addAtIndex(0, outAtom);
+			}
+			else{
+				addAtIndex(endMiddle, outAtom);
+			}
 		}
 	}
 }
@@ -258,8 +357,8 @@ void addThings(){
 int main()
 {
 
-    //int width = calculateCircularDistance(1, 6, 10);
-    //cout << width;
+    int width = calculateCircularDistance(4,2,10);
+    cout << width;
     // int middle = deleteSymmetry(5, 6);
     // addAtIndex(middle, 8);
     // printArray(scoreAtoms, scoreAtomsCount);

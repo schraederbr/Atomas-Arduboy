@@ -9,7 +9,7 @@ Arduboy2 arduboy;
 #define MAX_ARRAY_SIZE 20
 //Should randomly start with 2-6 atoms or something like that
 int prevAtoms[MAX_ARRAY_SIZE];
-int atoms[MAX_ARRAY_SIZE] = {4,2,2,2,2,4,2,-1,2};;
+int atoms[MAX_ARRAY_SIZE] = {4,2,2,2,2,4,2,-1,2};
 int scoreAtoms[MAX_ARRAY_SIZE];
 int scoreAtomsCount = 0;
 int count = 9;
@@ -129,8 +129,41 @@ void deepCopyArray(int* source, int* dest, int size) {
 // }
 
 //Rewrite this make it recursive or just do it yourself, don't trust GPT-4
-int getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
+void getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
+	start = i;
+	end = i;
+	int distanceFromIndex = 1;
+	while(distanceFromIndex * 2 - 1 < len){
+		if(atoms[i] != -1){
+			return;
+		}
+		if(len < 3){
+			return;
+		}
+		int left, right;
+		if(i-distanceFromIndex >= 0){
+			left = atoms[i-distanceFromIndex];
+		}
+		else{
+			left = atoms[len - distanceFromIndex];
+		}
+		if(i + distanceFromIndex < len){
+			right = atoms[i + distanceFromIndex];
+		}
+		else{
+			right = atoms[0 + distanceFromIndex - 1]; 
+		}
+		if(left == right){
+			start = left;
+			end = right;
+			distanceFromIndex++;
+		}
+		else{
+			return;
+		}
+	}
 	
+
 }
 
 // void deleteSubArrayCircular(int arr[], int& size, int start, int end) {
@@ -376,8 +409,13 @@ void addThings(){
 			int subScore = calculateScore(scoreAtoms, scoreAtomsCount, 0, outAtom);
 			currentScore += subScore;
 			
+			if(count == 0){
+				addAtIndex(0, outAtom);
+			}
+			else{
+				addAtIndex(endMiddle, outAtom);
+			}
 			
-			addAtIndex(endMiddle, outAtom);
 		}
 	}
 	printArray(atoms);
