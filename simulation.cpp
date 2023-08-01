@@ -148,7 +148,7 @@ int getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
 	return (distanceFromIndex) * 2 ;
 }
 
-int sym(int i){
+int sym(int i, int& center){
     deepCopyArray(atoms, atomsD, MAX_ARRAY_SIZE);
     countD = count;
     int left, right;
@@ -168,17 +168,45 @@ int sym(int i){
         else{
             right = i + 1;
         }
-        if(left == right){
+        if(atomsD[left] == atomsD[right]){
             width += 2;
             //Delete the two things
-            if(left > i && right < i || left < i && right > i){
+            //These might not be right order. 
+            //Just delete the one that doesn't require changing index first
+            if(left > i && right < i){
+                deleteAtIndex(atomsD, countD, left);
+                deleteAtIndex(atomsD, countD, right);
                 i--;
             }
-            if(left > i && right > i){
+            else if(left < i && right > i){
+                deleteAtIndex(atomsD, countD, right);
+                deleteAtIndex(atomsD, countD, left);
+                i--;
+            }
+            else if(left > i && right > i){
+                if(left > right){
+                    deleteAtIndex(atomsD, countD, left);
+                    deleteAtIndex(atomsD, countD, right);
+                }
+                else{
+                    deleteAtIndex(atomsD, countD, right);
+                    deleteAtIndex(atomsD, countD, left);
+                }
                 //i doesn't change?
             }
-            if( left < i && right < i){
+            else if( left < i && right < i){
+                if(left > right){
+                    deleteAtIndex(atomsD, countD, left);
+                    deleteAtIndex(atomsD, countD, right);
+                }
+                else{
+                    deleteAtIndex(atomsD, countD, right);
+                    deleteAtIndex(atomsD, countD, left);
+                }
                 i -= 2;
+            }
+            else{
+                cout << "UHHH something messed up";
             }
             
         }
@@ -186,6 +214,8 @@ int sym(int i){
             break;
         }
     }
+    cout << "I: " << i << "\n";
+    center = i - 1;
     return width;
     
 }
@@ -327,10 +357,13 @@ void addThings(){
 			int start, end;
 			//This width probably isn't correct
 			//int width = findSymmetry(i);
-			int width = getPlusSymmetry(atoms, count, i, start, end);
-			cout << "Width: " << width;
+			//int width = getPlusSymmetry(atoms, count, i, start, end);
+			int realMiddle;
+			int width = sym(i, realMiddle);
+			cout << "Width: " << width << "\n";
             //width = calculateCircularDistance(start, end, count);
 			int endMiddle = deleteSymmetry(i, width);
+			cout << "EndMiddle: " << endMiddle << "\n";
 			int outAtom;
 			int subScore = calculateScore(scoreAtoms, scoreAtomsCount, 0, outAtom);
 			cout << "outAtom: " << outAtom << "\n";
@@ -341,7 +374,8 @@ void addThings(){
 				addAtIndex(0, outAtom);
 			}
 			else{
-				addAtIndex(endMiddle, outAtom);
+				//addAtIndex(endMiddle, outAtom);
+				addAtIndex(realMiddle, outAtom);
 			}
 		}
 	}
@@ -357,8 +391,8 @@ void addThings(){
 int main()
 {
 
-    int width = calculateCircularDistance(4,2,10);
-    cout << width;
+    // int width = calculateCircularDistance(4,2,10);
+    // cout << width;
     // int middle = deleteSymmetry(5, 6);
     // addAtIndex(middle, 8);
     // printArray(scoreAtoms, scoreAtomsCount);

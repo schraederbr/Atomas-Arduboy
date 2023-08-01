@@ -10,6 +10,8 @@ Arduboy2 arduboy;
 //Should randomly start with 2-6 atoms or something like that
 int prevAtoms[MAX_ARRAY_SIZE];
 int atoms[MAX_ARRAY_SIZE] = {4,2,2,2,2,4,2,-1,2};
+int atomsD[MAX_ARRAY_SIZE];
+int countD = 0;
 int scoreAtoms[MAX_ARRAY_SIZE];
 int scoreAtomsCount = 0;
 int count = 9;
@@ -164,6 +166,78 @@ void getPlusSymmetry(int arr[], int len, int i, int &start, int &end){
 	}
 	
 
+}
+
+int sym(int i, int& center){
+    deepCopyArray(atoms, atomsD, MAX_ARRAY_SIZE);
+    countD = count;
+    int left, right;
+    int width = 0;
+    while(countD >= 3){
+        i = i % countD;
+        //Make sure i is in bounds
+        if(i - 1 < 0){
+            left = countD - 1;
+        }
+        else{
+            left = i - 1;
+        }
+        if(i + 1 >= countD){
+            right = 0;
+        }
+        else{
+            right = i + 1;
+        }
+        if(atomsD[left] == atomsD[right]){
+            width += 2;
+            //Delete the two things
+            //These might not be right order. 
+            //Just delete the one that doesn't require changing index first
+            if(left > i && right < i){
+                deleteAtIndex(atomsD, countD, left);
+                deleteAtIndex(atomsD, countD, right);
+                i--;
+            }
+            else if(left < i && right > i){
+                deleteAtIndex(atomsD, countD, right);
+                deleteAtIndex(atomsD, countD, left);
+                i--;
+            }
+            else if(left > i && right > i){
+                if(left > right){
+                    deleteAtIndex(atomsD, countD, left);
+                    deleteAtIndex(atomsD, countD, right);
+                }
+                else{
+                    deleteAtIndex(atomsD, countD, right);
+                    deleteAtIndex(atomsD, countD, left);
+                }
+                //i doesn't change?
+            }
+            else if( left < i && right < i){
+                if(left > right){
+                    deleteAtIndex(atomsD, countD, left);
+                    deleteAtIndex(atomsD, countD, right);
+                }
+                else{
+                    deleteAtIndex(atomsD, countD, right);
+                    deleteAtIndex(atomsD, countD, left);
+                }
+                i -= 2;
+            }
+            else{
+                //cout << "UHHH something messed up";
+            }
+            
+        }
+        else{
+            break;
+        }
+    }
+    //cout << "I: " << i << "\n";
+    center = i - 1;
+    return width;
+    
 }
 
 // void deleteSubArrayCircular(int arr[], int& size, int start, int end) {
@@ -389,8 +463,6 @@ int calculateCircularDistance(int start, int end, int length) {
 //That might be useful to simplify my add function
 //Takes in a symmetrical array
 void addThings(){
-	arduboy.clear();
-	printArray(atoms);
 	while(hasPlus(atoms)){
 		int i = 0;
 		for(; i < count; i++){
@@ -401,26 +473,29 @@ void addThings(){
 		if(atoms[i] == -1){
 			int start, end;
 			//This width probably isn't correct
-			int width;
-			getPlusSymmetry(atoms, count, i, start, end);
-            width = calculateCircularDistance(start, end, count);
+			//int width = findSymmetry(i);
+			//int width = getPlusSymmetry(atoms, count, i, start, end);
+			int realMiddle;
+			int width = sym(i, realMiddle);
+			//cout << "Width: " << width << "\n";
+            //width = calculateCircularDistance(start, end, count);
 			int endMiddle = deleteSymmetry(i, width);
+			//cout << "EndMiddle: " << endMiddle << "\n";
 			int outAtom;
 			int subScore = calculateScore(scoreAtoms, scoreAtomsCount, 0, outAtom);
+			//cout << "outAtom: " << outAtom << "\n";
 			currentScore += subScore;
+			
 			
 			if(count == 0){
 				addAtIndex(0, outAtom);
 			}
 			else{
-				addAtIndex(endMiddle, outAtom);
+				//addAtIndex(endMiddle, outAtom);
+				addAtIndex(realMiddle, outAtom);
 			}
-			
 		}
 	}
-	printArray(atoms);
-	arduboy.display();
-	arduboy.delayShort(3000);
 }
 
 int deleteSymmetry(int center, int width){
