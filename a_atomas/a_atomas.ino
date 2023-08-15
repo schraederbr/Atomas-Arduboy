@@ -4,7 +4,7 @@
 #include <Arduboy2.h>
 #include <EEPROM.h>
 Arduboy2 arduboy;
-#define EEPROM_START 512
+#define EEPROM_START 806
 //Should randomly start with 2-6 atoms or something like that
 int prevAtoms[20];
 int atoms[20] = {1};
