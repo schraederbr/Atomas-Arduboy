@@ -7,8 +7,8 @@ Arduboy2 arduboy;
 #define EEPROM_START 806
 //Should randomly start with 2-6 atoms or something like that
 int prevAtoms[20];
-int atoms[20] = {11,5,12,23,9};
-int count = 5;
+int atoms[20] = {1};
+int count = 1;
 int oldCount = 0;
 bool plusEnabled = true;
 int sincePlus = 0;
