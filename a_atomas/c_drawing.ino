@@ -9,7 +9,12 @@ int innerRadius = 14;
 // degrees * pi/180
 
 void drawCircleNumber(int x, int y, int num) {
-	arduboy.drawCircle(x, y, 5, WHITE);
+	if(num > 9){
+		drawDotCircle(x,y,5,8, WHITE);
+	}else{
+		arduboy.drawCircle(x, y, 5, WHITE);
+	}
+	
 	arduboy.setCursor(x - 2, y - 3);
 	if (num == -1) {
 		arduboy.print("+");
@@ -96,7 +101,15 @@ void drawSymmetryCircle() {
 
 }
 
-
+void drawDotCircle(int cx, int cy, int r, int dots, bool white) {
+  float dotSpacing = M_PI/(dots/2);
+  float angle = 2 * M_PI;
+  for(float theta = 0; theta < angle; theta += dotSpacing) {
+    int x = round(r * cos(theta));
+    int y = round(r * sin(theta));
+    arduboy.drawPixel(cx + x, cy + y, white);
+  }
+}
 void drawPartialCircle(int r, int x0, int y0, int x1, int y1) {
     int centerX = 64, centerY = 32;
     float theta0 = atan2(y0 - centerY, x0 - centerX);
