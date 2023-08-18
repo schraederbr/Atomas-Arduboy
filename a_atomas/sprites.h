@@ -1,0 +1,49 @@
+const uint8_t PROGMEM ZERO[] = {
+
+0x1f, 0x11, 0x1f, 
+};
+
+const uint8_t PROGMEM ONE[] = {
+
+0x11, 0x1f, 0x10, 
+};
+
+const uint8_t PROGMEM TWO[] = {
+
+0x1d, 0x15, 0x17, 
+};
+
+const uint8_t PROGMEM THREE[] = {
+
+0x15, 0x15, 0x1f, 
+};
+
+const uint8_t PROGMEM FOUR[] = {
+
+0x07, 0x04, 0x1f, 
+};
+
+const uint8_t PROGMEM FIVE[] = {
+
+0x17, 0x15, 0x1d, 
+};
+
+const uint8_t PROGMEM SIX[] = {
+
+0x1f, 0x15, 0x1d, 
+};
+
+const uint8_t PROGMEM SEVEN[] = {
+
+0x01, 0x01, 0x1f, 
+};
+
+const uint8_t PROGMEM EIGHT[] = {
+
+0x1f, 0x15, 0x1f, 
+};
+
+const uint8_t PROGMEM NINE[] = {
+
+0x17, 0x15, 0x1f, 
+};

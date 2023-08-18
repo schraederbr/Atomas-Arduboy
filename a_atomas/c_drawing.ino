@@ -6,26 +6,57 @@ int centerY = 32;
 int radius = 24;
 int innerRadius = 14;
 
-// degrees * pi/180
+const uint8_t * const digit_sprites[] PROGMEM = {ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE};
+
+
+void drawNumber(int16_t x, int16_t y, int number, uint8_t color = WHITE)
+{
+  char buf[5]; // Buffer big enough for 4 chars + null term.
+  itoa(number, buf, 10); // Convert to base 10 string
+  
+  for(int i = 0; buf[i] != 0; ++i, x += 4) // Each digit gets 4 pixels of space
+  {
+    arduboy.drawBitmap(x, 
+      y, 
+      (const uint8_t *)pgm_read_word(&(digit_sprites[buf[i] - '0'])),
+      3, 
+      5, 
+      color
+    );
+  }
+}
 
 void drawCircleNumber(int x, int y, int num) {
-	if(num > 9){
-		drawDotCircle(x,y,5,8, WHITE);
-	}else{
-		arduboy.drawCircle(x, y, 5, WHITE);
-	}
-	
+	// drawNumber(x-2,y-2,num);
 	arduboy.setCursor(x - 2, y - 3);
 	if (num == -1) {
 		arduboy.print("+");
 	} else if (num == -2) {
 		arduboy.print("-");
-	} else {
-		arduboy.print(num);
+	} else{
+		drawNumber(x-2,y-2,num);
 	}
+	// if(num > 9){
+	// 	drawDotCircle(x,y,5,8, WHITE);
+	// }else{
+	// 	arduboy.drawCircle(x, y, 5, WHITE);
+	// }
+	// arduboy.drawRect(x - 5, y - 5, 10, 10);
+	// arduboy.drawCircle(x, y, 5, WHITE);
+	// tinyfont.setCursor(x - 5, y - 2);
+	
+	//else {
+	// 	if(num > 9){
+	// 		tinyfont.print(num);
+	// 	}
+	// 	else{
+	// 		arduboy.print(num);
+	// 	}
+		
+	// }
 	// This is to fill in the circle
 	// The print call deletes part of the cicle
-	arduboy.drawPixel(x + 3, y + 4);
+	// arduboy.drawPixel(x + 3, y + 4);
 }
 
 void drawAtom(int i, int num) {

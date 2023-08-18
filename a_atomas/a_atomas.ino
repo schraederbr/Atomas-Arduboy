@@ -3,7 +3,10 @@
 
 #include <Arduboy2.h>
 #include <EEPROM.h>
+#include <Tinyfont.h>
+#include "sprites.h"
 Arduboy2 arduboy;
+Tinyfont tinyfont = Tinyfont(arduboy.sBuffer, Arduboy2::width(), Arduboy2::height());
 #define EEPROM_START 806
 //Should randomly start with 2-6 atoms or something like that
 int prevAtoms[20];

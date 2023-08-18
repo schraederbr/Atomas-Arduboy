@@ -46,6 +46,9 @@ void setup(){
 	arduboy.clear();
 	arduboy.setFrameRate(60);
 	arduboy.initRandomSeed();
+	// generateAtomNum();
+	// atoms[0] = nextNum;
+	// generateAtomNum();
 }
 void doMinus(){
 	deepCopyArray(atoms, prevAtoms, count);
