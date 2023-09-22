@@ -2,13 +2,17 @@
 // arduino-cli compile --fqbn arduboy:avr:arduboy .\a_atomas.ino --output-dir .\build\
 
 #include <Arduboy2.h>
-#include <EEPROM.h>
-#include <Tinyfont.h>
-#include "sprites.h"
 Arduboy2 arduboy;
-Tinyfont tinyfont = Tinyfont(arduboy.sBuffer, Arduboy2::width(), Arduboy2::height());
+#include <EEPROM.h>
+#include "src/fonts/Font3x5.h"
+Font3x5 font3x5 = Font3x5();
+#include "src/fonts/Font4x6.h"
+Font4x6 font4x6 = Font4x6();
+
 #define EEPROM_START 806
 //Should randomly start with 2-6 atoms or something like that
+//Also, might want to adjust the max atoms
+int maxAtoms = 16;
 int prevAtoms[20];
 int atoms[20] = {1};
 int count = 1;

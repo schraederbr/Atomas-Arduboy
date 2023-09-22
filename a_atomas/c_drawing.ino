@@ -6,24 +6,56 @@ int centerY = 32;
 int radius = 24;
 int innerRadius = 14;
 
-const uint8_t * const digit_sprites[] PROGMEM = {ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE};
 
 
-void drawNumber(int16_t x, int16_t y, int number, uint8_t color = WHITE)
-{
-  char buf[5]; // Buffer big enough for 4 chars + null term.
-  itoa(number, buf, 10); // Convert to base 10 string
-  
-  for(int i = 0; buf[i] != 0; ++i, x += 4) // Each digit gets 4 pixels of space
-  {
-    arduboy.drawBitmap(x, 
-      y, 
-      (const uint8_t *)pgm_read_word(&(digit_sprites[buf[i] - '0'])),
-      3, 
-      5, 
-      color
-    );
-  }
+// size can be 0,1,2
+void drawNumber(int16_t x, int16_t y, int number, int size){
+    if(size == 0){
+        font3x5.setCursor(x,y);
+        font3x5.print(number);
+    }
+    else if(size == 1){
+        font4x6.setCursor(x,y);
+        font4x6.print(number);
+    }
+    else{
+        arduboy.setCursor(x,y);
+        arduboy.print(number);
+    }
+} 
+
+int getFontSize(){
+    bool doubleDigits = false;
+    bool tripleDigits = false;
+    for (size_t i = 0; i < count; i++)
+    {
+        if(atoms[i] > 99){
+            tripleDigits = true;
+        }
+        if(atoms[i] > 9){
+            doubleDigits = true;
+        }
+        
+    }
+    if(tripleDigits){
+            if(count < 8){
+                return 2;
+            }
+            if(count < 10){
+                return 1;
+            }
+            return 0;
+        }
+    if(doubleDigits){
+            if(count < 13){
+                return 2;
+            }
+            else{
+                return 1;
+            }
+        }
+    return 2;
+    
 }
 
 void drawCircleNumber(int x, int y, int num) {
@@ -34,7 +66,8 @@ void drawCircleNumber(int x, int y, int num) {
 	} else if (num == -2) {
 		arduboy.print("-");
 	} else{
-		drawNumber(x-2,y-2,num);
+        // May need to adjust the -2, -2 based on the fontsize
+		drawNumber(x-2,y-2,num,getFontSize());
 	}
 	// if(num > 9){
 	// 	drawDotCircle(x,y,5,8, WHITE);

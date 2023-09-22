@@ -160,7 +160,7 @@ void loop()
 				index = 0;
 			}
 		}
-        if(count > 16){
+        if(count > maxAtoms){
             loseGame();
         }
 		arduboy.clear();
