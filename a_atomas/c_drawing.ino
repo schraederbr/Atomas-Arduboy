@@ -66,6 +66,7 @@ void drawCircleNumber(int x, int y, int num) {
 	} else if (num == -2) {
 		arduboy.print("-");
 	} else{
+        // I could draw a dot at where the middle should be, then adjust based on that
         // May need to adjust the -2, -2 based on the fontsize
 		drawNumber(x-2,y-2,num,getFontSize());
 	}
