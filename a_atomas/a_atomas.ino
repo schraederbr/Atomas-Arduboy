@@ -11,15 +11,15 @@ Font4x6 font4x6 = Font4x6();
 
 #define EEPROM_START 806
 //Should randomly start with 2-6 atoms or something like that
-//Also, might want to adjust the max atoms
-int maxAtoms = 16;
+//Might want to add exclamation point or something when at max atoms - 1
+int maxAtoms = 14;
 int prevAtoms[20];
-int atoms[20] = {1};
-int count = 1;
+int atoms[20] = {};
+int count = 0;
 int oldCount = 0;
 bool plusEnabled = true;
 int sincePlus = 0;
-int turn = 0;
+long turn = 0;
 int baseNum = 1;
 int range = 4;
 int nextNum = 1;
@@ -52,12 +52,23 @@ struct SymLine{
     int start;
 };
 
+void initializeAtoms(){
+	int additionalAtoms = random(1, 5);
+	atoms[0] = random(baseNum,baseNum+range);
+	count = 1;
+	for(int i = 0; i < additionalAtoms; i++){
+		addAtom(0, random(baseNum,baseNum+range));
+		turn--;
+	}
+	generateAtomNum();
+}
+
 void generateAtomNum()
 {
-	if(turn % 40 == 0){
+	if(turn % 40 == 0 && turn != 0){
 		baseNum++;
 	}
-	if(turn % 150 == 0){
+	if(turn % 150 == 0 && turn != 0){
 		range++;
 	}
 	nextNum = random(baseNum,baseNum+range);
@@ -82,7 +93,7 @@ void generateAtomNum()
         nextNum = -1;
         sincePlus = 0;
     }
-	if(turn % 20 == 0){
+	if(turn % 20 == 0 && turn != 0){
 		nextNum = -2;
 	}
     sincePlus++;
@@ -271,9 +282,10 @@ bool hasPlus(int atoms[], int count){
 }
 
 void saveScore(){
-    int highScore = EEPROM.read(EEPROM_START);
+	long highScore;
+    EEPROM.get(EEPROM_START, highScore);
     if(turn > highScore){
-        EEPROM.update(EEPROM_START, turn);
+        EEPROM.put(EEPROM_START, turn);
     }
 }
 

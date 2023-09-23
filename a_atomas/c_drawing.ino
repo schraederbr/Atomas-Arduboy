@@ -10,16 +10,17 @@ int innerRadius = 14;
 
 // size can be 0,1,2
 void drawNumber(int16_t x, int16_t y, int number, int size){
+	int digits =  1 + (number > 9) + (number > 99);
     if(size == 0){
-        font3x5.setCursor(x,y);
+        font3x5.setCursor(x - 2 * digits, y - 3);
         font3x5.print(number);
     }
     else if(size == 1){
-        font4x6.setCursor(x,y);
+        font4x6.setCursor(x - 2 * digits, y - 3);
         font4x6.print(number);
     }
     else{
-        arduboy.setCursor(x,y);
+        arduboy.setCursor(x - 3 * digits, y - 4);
         arduboy.print(number);
     }
 } 
@@ -59,16 +60,15 @@ int getFontSize(){
 }
 
 void drawCircleNumber(int x, int y, int num) {
-	// drawNumber(x-2,y-2,num);
-	arduboy.setCursor(x - 2, y - 3);
+	// Might want smaller + or - signs
 	if (num == -1) {
+		arduboy.setCursor(x - 3, y - 4);
 		arduboy.print("+");
 	} else if (num == -2) {
+		arduboy.setCursor(x - 3, y - 4);
 		arduboy.print("-");
 	} else{
-        // I could draw a dot at where the middle should be, then adjust based on that
-        // May need to adjust the -2, -2 based on the fontsize
-		drawNumber(x-2,y-2,num,getFontSize());
+		drawNumber(x,y,num,getFontSize());
 	}
 	// if(num > 9){
 	// 	drawDotCircle(x,y,5,8, WHITE);

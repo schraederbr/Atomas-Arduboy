@@ -8,22 +8,7 @@ Node *current = new Node();
 int debugMode = 0;
 
 
-void mainSetup()
-{
-	//Works
-	// int arr[] = {3,2,3,2,-1,2};
-	// count = 6;
-	arduboy.begin();
-	arduboy.clear();
-	arduboy.setFrameRate(60);
-	if (debugMode == 1){
-		printArray(atoms);
-		evaluatePlus(atoms);
-		arduboy.print("Final \n");
-		printArray(atoms);
-	}
-	arduboy.display();
-}
+
 void debugMode1(){
     
 	arduboy.clear();
@@ -46,9 +31,7 @@ void setup(){
 	arduboy.clear();
 	arduboy.setFrameRate(60);
 	arduboy.initRandomSeed();
-	// generateAtomNum();
-	// atoms[0] = nextNum;
-	// generateAtomNum();
+	initializeAtoms();
 }
 void doMinus(){
 	deepCopyArray(atoms, prevAtoms, count);
@@ -59,12 +42,12 @@ void doMinus(){
 }
 
 void loseGame(){
+	saveScore();
     arduboy.clear();
     arduboy.print("You lasted ");
     arduboy.print(turn);
     arduboy.print(" turns");
     arduboy.print("\n");
-    saveScore();
     arduboy.print("High Score: ");
     arduboy.print(EEPROM.read(512));
     arduboy.display();
@@ -99,6 +82,7 @@ void fullReset(){
     animationCount = 0;
     inMinus = false;
     animate = false;
+	initializeAtoms();
 }
 
 void loop()
