@@ -49,7 +49,7 @@ void loseGame(){
     arduboy.print(" turns");
     arduboy.print("\n");
     arduboy.print("High Score: ");
-    arduboy.print(EEPROM.read(512));
+    arduboy.print(EEPROM.read(EEPROM_START));
     arduboy.display();
     while(true){
         arduboy.pollButtons();
