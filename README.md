@@ -5,4 +5,5 @@ Play it here: https://schraederbr.github.io/
 
 Use LEFT, RIGHT, A BUTTON, B BUTTON to play. A inserts the middle atom, B converts an atom to plus (when grabbed via minus)
 
-[![GameplayGif](https://github.com/schraederbr/Atomas-Arduboy/assets/53031474/52759278-23e0-4d1b-bbb2-53648c13dcc8)](https://schraederbr.github.io/)
+[![image](https://github.com/schraederbr/Atomas-Arduboy/assets/53031474/dbb52885-5b5a-4673-90f6-571077d7930e)](https://schraederbr.github.io/)
+
